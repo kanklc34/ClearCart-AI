@@ -1,37 +1,72 @@
-import httpx
-from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 from loguru import logger
+import time
+import asyncio
+import concurrent.futures
+import random
 
 class ScraperService:
     def __init__(self):
-        self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        }
+        self.browser_args = [
+            "--disable-blink-features=AutomationControlled",
+            "--no-sandbox",
+            "--disable-infobars"
+        ]
 
-    async def scrape_url(self, url: str):
+    def _sync_scrape(self, url: str) -> str:
         try:
-            logger.info(f"URL kazınıyor: {url}")
-            async with httpx.AsyncClient(headers=self.headers, follow_redirects=True, timeout=10.0) as client:
-                response = await client.get(url)
+            with sync_playwright() as p:
+                # iPhone simülasyonu (Mobil siteler daha az bot korumalıdır)
+                device = p.devices['iPhone 13']
+                browser = p.chromium.launch(headless=True, args=self.browser_args)
                 
-                if response.status_code != 200:
-                    logger.warning(f"Kazıma başarısız (Kod: {response.status_code})")
-                    return None
+                context = browser.new_context(
+                    **device,
+                    locale="tr-TR",
+                    timezone_id="Europe/Istanbul"
+                )
                 
-                soup = BeautifulSoup(response.text, 'html.parser')
+                page = context.new_page()
                 
-                # Gereksiz etiketleri temizle
-                for script in soup(["script", "style", "nav", "footer", "header"]):
-                    script.decompose()
+                logger.info(f"İnsan taklidi ile kazıma: {url}")
                 
-                # Metni temizle ve birleştir
-                text = soup.get_text(separator=' ', strip=True)
+                # Sayfaya git
+                response = page.goto(url, wait_until="domcontentloaded", timeout=40000)
                 
-                # Çok uzun metinleri Gemini token limitleri ve hız için sınırla
-                return text[:8000] 
+                if not response:
+                    browser.close()
+                    return ""
+
+                # BOT KORUMASINI AŞMAK İÇİN İNSAN HAREKETLERİ
+                # 1. Rastgele bekleme
+                time.sleep(random.uniform(1, 3))
+                
+                # 2. Sayfayı yavaşça aşağı kaydır (Lazy loading verileri için)
+                page.mouse.wheel(0, 500)
+                time.sleep(1)
+                page.mouse.wheel(0, 500)
+                
+                if response.status == 403:
+                    logger.warning("Hala engelleniyoruz, ama içerik çekmeyi deneyeceğiz.")
+                
+                # Sayfadaki saf metni al (Engellenmiş olsa bile bazı veriler gelebilir)
+                text = page.inner_text("body")
+                
+                # Eğer çok kısa bir metin geldiyse gerçekten engellenmişizdir
+                if len(text) < 500:
+                    browser.close()
+                    return "ERROR_PLATFORM_BLOCKED"
+
+                browser.close()
+                return text[:7000]
                 
         except Exception as e:
-            logger.error(f"Scraper Hatası: {str(e)}")
-            return None
+            logger.error(f"Playwright insansı kazıma hatası: {str(e)}")
+            return ""
+
+    async def scrape_url(self, url: str) -> str:
+        loop = asyncio.get_event_loop()
+        with concurrent.futures.ThreadPoolExecutor() as pool:
+            return await loop.run_in_executor(pool, self._sync_scrape, url)
 
 scraper_service = ScraperService()

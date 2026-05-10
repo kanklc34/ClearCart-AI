@@ -3,50 +3,42 @@ import json
 from loguru import logger
 from urllib.parse import urlparse
 
+
 class OrchestratorAgent(BaseAgent):
     def __init__(self):
-        super().__init__(name="Orchestrator", model_type="flash")
+        super().__init__(name="Orchestrator")
 
-    async def run(self, url: str):
+    async def run(self, url: str) -> dict:
         domain = urlparse(url).netloc.lower()
         path = urlparse(url).path
-        
-        # Eğer path boşsa veya sadece / ise ana sayfadır
-        is_homepage = path == "" or path == "/"
-        
+
         prompt = f"""
         Aşağıdaki URL'yi analiz et ve bir e-ticaret ÜRÜN SAYFASI olup olmadığını belirle.
         URL: {url}
         Domain: {domain}
         Path: {path}
-        
-        Yanıtı sadece şu JSON formatında ver:
+
+        Yanıtı SADECE şu JSON formatında ver, başka hiçbir şey yazma:
         {{
-            "is_product_page": boolean,
-            "page_type": "product" | "homepage" | "search" | "invalid",
-            "platform": "amazon" | "trendyol" | "hepsiburada" | "other",
-            "is_scam": boolean,
-            "scam_reason": "Neden?",
-            "error_message": "Eğer ürün sayfası değilse kullanıcıya verilecek nazik uyarı",
-            "tasks": ["extract_policy", "analyze_risk"]
+            "is_product_page": true/false,
+            "page_type": "product" | "homepage" | "search" | "category" | "invalid",
+            "platform": "amazon" | "trendyol" | "hepsiburada" | "n11" | "other",
+            "is_scam": true/false,
+            "scam_reason": "Varsa neden sahte/zararlı olduğunu açıkla, yoksa null",
+            "error_message": "Ürün sayfası değilse kullanıcıya nazik uyarı, yoksa null"
         }}
         """
-        
+
         response = await self.ask_gemini(prompt)
         try:
-            clean_response = response.replace("```json", "").replace("```", "").strip()
-            data = json.loads(clean_response)
-            
-            # Eğer ana sayfaysa veya ürün sayfası değilse görevleri iptal et
-            if not data.get("is_product_page") or data.get("is_scam"):
-                data["tasks"] = []
-                
+            clean = response.replace("```json", "").replace("```", "").strip()
+            data = json.loads(clean)
             return data
         except Exception as e:
-            logger.error(f"Orchestrator Hatası: {str(e)}")
+            logger.error(f"Orchestrator parse hatası: {e}")
             return {
                 "is_product_page": False,
                 "page_type": "invalid",
                 "is_scam": False,
-                "error_message": "Bağlantı analiz edilemedi. Lütfen geçerli bir ürün linki paylaşın."
+                "error_message": "Bağlantı analiz edilemedi. Lütfen geçerli bir ürün linki paylaşın.",
             }
