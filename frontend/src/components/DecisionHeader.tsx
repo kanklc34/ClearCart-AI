@@ -55,7 +55,7 @@ export const DecisionHeader: React.FC<DecisionHeaderProps> = ({
             {/* Global Score with Indicator */}
             <div className="p-8 min-w-[240px] bg-surface/30">
                 <div className="text-[10px] font-label-caps text-on-surface-variant mb-3 opacity-60 tracking-[0.2em]">
-                    GLOBAL_TRUST_SCORE
+                    GENEL GÜVEN PUANI
                 </div>
                 <div className="flex items-baseline gap-3">
                     <div className="text-5xl font-data-mono text-primary leading-none">
@@ -74,7 +74,7 @@ export const DecisionHeader: React.FC<DecisionHeaderProps> = ({
             {/* Confidence Index - Analytical Meter */}
             <div className="p-8 min-w-[320px] relative overflow-hidden bg-surface/50">
                 <div className="text-[10px] font-label-caps text-on-surface-variant mb-4 opacity-60 tracking-[0.2em] relative z-10">
-                    CALIBRATED_CONFIDENCE_INDEX
+                    KALİBRE EDİLMİŞ GÜVEN ENDEKSİ
                 </div>
 
                 <div className="flex items-center justify-between mb-2 relative z-10">
@@ -105,7 +105,7 @@ export const DecisionHeader: React.FC<DecisionHeaderProps> = ({
                 </div>
 
                 <div className="text-[9px] font-body-sm text-on-surface-variant opacity-50 italic">
-                    Confidence mapped to evidence density and agent consensus variance.
+                    Güven puanı, kanıt yoğunluğu ve ajan konsensüs varyansına göre hesaplanmıştır.
                 </div>
 
                 {confidence < 0.6 && (

@@ -226,7 +226,7 @@ export default function App() {
         }
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'An unexpected error occurred.';
+      const message = err instanceof Error ? err.message : 'Beklenmedik bir hata oluştu.';
       setError(message);
     } finally {
       setIsAnalyzing(false);
@@ -265,7 +265,7 @@ export default function App() {
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center opacity-30">
               <div className="text-label-caps font-label-caps tracking-[0.3em]">
-                NO_AUDIT_DATA — RUN A SCAN FIRST
+                DENETİM VERİSİ YOK — ÖNCE BİR TARAMA YAPIN
               </div>
             </div>
           )
@@ -275,8 +275,8 @@ export default function App() {
             <section className="px-6 py-8 border-b border-outline-variant bg-surface-container-lowest">
               <div className="max-w-4xl">
                 <div className="mb-6">
-                  <h2 className="text-3xl font-headline-md text-primary tracking-tight">Audit Engine</h2>
-                  <p className="text-body-md text-on-surface-variant mt-2">Deploy agentic consensus for marketplace trust verification.</p>
+                  <h2 className="text-3xl font-headline-md text-primary tracking-tight">Denetim Motoru</h2>
+                  <p className="text-body-md text-on-surface-variant mt-2">Pazaryeri güven doğrulaması için otonom konsensüs sistemini devreye al.</p>
                 </div>
 
                 <div className="flex gap-3">
@@ -286,7 +286,7 @@ export default function App() {
                       value={url}
                       onChange={e => setUrl(e.target.value)}
                       onKeyDown={e => e.key === 'Enter' && handleAnalyze()}
-                      placeholder="Paste product listing URL (Amazon, Trendyol, AliExpress...)"
+                      placeholder="Ürün ilan URL'sini yapıştırın (Amazon, Trendyol, Hepsiburada...)"
                       className="flex-1 bg-transparent border-0 text-primary placeholder-on-surface-variant focus:outline-none text-body-md"
                     />
                   </div>
@@ -296,8 +296,8 @@ export default function App() {
                     className="self-stretch px-8 bg-primary text-on-primary font-label-caps text-label-caps hover:opacity-90 disabled:opacity-50 transition-all flex items-center gap-3"
                   >
                     {isAnalyzing
-                      ? <><RefreshCw size={18} className="animate-spin" /> ANALYZING</>
-                      : <><Search size={18} /> SCAN</>}
+                      ? <><RefreshCw size={18} className="animate-spin" /> ANALİZ EDİLİYOR</>
+                      : <><Search size={18} /> TARA</>}
                   </button>
                 </div>
 
@@ -305,7 +305,7 @@ export default function App() {
                   <div className="mt-4 p-4 border border-error bg-error/10 flex gap-3 animate-in fade-in slide-in-from-top-2">
                     <AlertTriangle size={20} className="text-error shrink-0" />
                     <div>
-                      <div className="text-label-caps font-bold text-error">SYSTEM_ERROR</div>
+                      <div className="text-label-caps font-bold text-error">SİSTEM_HATASI</div>
                       <div className="text-body-sm text-on-surface mt-1">{error}</div>
                     </div>
                   </div>
@@ -319,11 +319,11 @@ export default function App() {
                 <section className="p-6">
                   <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8">
                     <div className="md:col-span-4 border border-outline-variant bg-surface-container-low p-6">
-                      <div className="text-label-caps font-label-caps text-primary mb-6">AUDIT_PIPELINE</div>
+                      <div className="text-label-caps font-label-caps text-primary mb-6">DENETİM_SÜRECİ</div>
                       <SignalPipeline steps={PIPELINE_STEPS.map(s => ({ ...s, status: getStepStatus(s.id) }))} />
                     </div>
                     <div className="md:col-span-8 border border-outline-variant bg-surface-container-low flex flex-col h-[500px]">
-                      <div className="p-4 border-b border-outline-variant bg-surface text-label-caps font-label-caps text-primary">AGENT_LOG_STREAM</div>
+                      <div className="p-4 border-b border-outline-variant bg-surface text-label-caps font-label-caps text-primary">AJAN_LOG_AKIŞI</div>
                       <div ref={logContainerRef} className="p-6 space-y-4 overflow-y-auto scroll-smooth">
                         {progress.map((event, idx) => (
                           <div key={idx} className="flex gap-4 animate-in fade-in slide-in-from-left-4">
@@ -336,7 +336,7 @@ export default function App() {
                         ))}
                         {isAnalyzing && (
                           <div className="flex items-center gap-3 text-primary/50 text-[10px] font-label-caps tracking-widest mt-4">
-                            <Loader2 size={12} className="animate-spin" /> PRODUCING_INFERENCE...
+                            <Loader2 size={12} className="animate-spin" /> ÇIKARIM_ÜRETİLİYOR...
                           </div>
                         )}
                       </div>
@@ -413,7 +413,7 @@ export default function App() {
                         onClick={reset}
                         className="px-8 py-3 border border-outline-variant text-label-caps font-label-caps hover:border-primary hover:text-primary transition-all flex items-center gap-3"
                       >
-                        <RefreshCw size={18} /> NEW AUDIT SESSION
+                        <RefreshCw size={18} /> YENİ DENETİM OTURUMU
                       </button>
                     </div>
 
@@ -424,7 +424,7 @@ export default function App() {
               {!isAnalyzing && progress.length === 0 && !audit && (
                 <div className="flex-1 flex flex-col items-center justify-center opacity-30">
                   <FileSearch size={64} className="mb-4" />
-                  <div className="text-label-caps font-label-caps tracking-[0.3em]">SYSTEM_READY_FOR_INFERENCE</div>
+                  <div className="text-label-caps font-label-caps tracking-[0.3em]">SİSTEM_ANALİZE_HAZIR</div>
                 </div>
               )}
             </div>

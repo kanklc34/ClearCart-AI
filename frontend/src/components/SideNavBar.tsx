@@ -13,10 +13,6 @@ const navItems: NavItem[] = [
     { id: 'API Logs', label: 'API Logları', icon: 'list_alt' },
 ];
 
-const footerItems = [
-    { id: 'Docs', label: 'Dokümanlar', icon: 'description' },
-    { id: 'Status', label: 'Durum', icon: 'check_circle' },
-];
 
 interface SideNavBarProps {
     activeTab: string;
@@ -63,21 +59,7 @@ export const SideNavBar: React.FC<SideNavBarProps> = ({ activeTab, onTabChange }
                 ))}
             </nav>
 
-            {/* Footer */}
-            <div className="p-4 border-t border-outline-variant flex flex-col gap-2">
-                {footerItems.map((item) => (
-                    <button
-                        key={item.id}
-                        onClick={() => onTabChange(item.id)}
-                        className="flex items-center gap-3 text-on-surface-variant text-label-caps font-label-caps hover:text-primary transition-colors w-full text-left"
-                    >
-                        <span className="material-symbols-outlined text-[16px]">
-                            {item.icon}
-                        </span>
-                        {item.label}
-                    </button>
-                ))}
-            </div>
+            {/* Footer Removed for Minimalism */}
         </aside>
     );
 };

@@ -48,7 +48,7 @@ export const SignalPipeline: React.FC<SignalPipelineProps> = ({ steps }) => {
                         </div>
                         {step.status === 'active' && (
                             <div className="text-body-sm text-on-surface-variant mt-1 animate-pulse">
-                                Processing neural inference...
+                                Nöral çıkarım işleniyor...
                             </div>
                         )}
                     </div>

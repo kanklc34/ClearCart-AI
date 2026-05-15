@@ -52,7 +52,7 @@ export const RiskModule: React.FC<RiskModuleProps> = ({
                 {/* Score Bar with Uncertainty Shading */}
                 <div>
                     <div className="flex justify-between text-[10px] font-label-caps text-on-surface-variant mb-1.5 opacity-70">
-                        <span>DIMENSION_SCORE</span>
+                        <span>BOYUT_PUANI</span>
                         <span className="text-primary font-data-mono">
                             {score !== null ? score : '--'}
                         </span>
@@ -81,7 +81,7 @@ export const RiskModule: React.FC<RiskModuleProps> = ({
                 {/* Evidence Strength Meter */}
                 <div>
                     <div className="text-[9px] font-label-caps text-on-surface-variant mb-1.5 opacity-60 tracking-widest">
-                        EVIDENCE_DENSITY
+                        KANIT_YOĞUNLUĞU
                     </div>
                     {findings.length > 0 ? (
                         <div className="flex h-1 gap-[3px]">
@@ -95,7 +95,7 @@ export const RiskModule: React.FC<RiskModuleProps> = ({
                         </div>
                     ) : (
                         <div className="text-[10px] font-data-mono text-on-surface-variant/40 italic">
-                            NO_DIRECT_SIGNALS
+                            DOĞRUDAN_SİNYAL_YOK
                         </div>
                     )}
                 </div>
@@ -103,7 +103,7 @@ export const RiskModule: React.FC<RiskModuleProps> = ({
                 {/* Audit Findings - Muted Anomaly Highlighting */}
                 <div className="animate-in fade-in zoom-in-95 duration-700">
                     <div className="flex items-center gap-2 mb-2">
-                        <div className="text-[9px] font-label-caps text-on-surface-variant opacity-60">AUDIT_LOG</div>
+                        <div className="text-[9px] font-label-caps text-on-surface-variant opacity-60">DENETİM_GÜNLÜĞÜ</div>
                         {hasAnomalies && <AlertCircle size={10} className="text-tertiary animate-pulse" />}
                     </div>
                     {findings.length > 0 ? (
@@ -123,7 +123,7 @@ export const RiskModule: React.FC<RiskModuleProps> = ({
                     ) : (
                         <div className="text-[11px] leading-relaxed font-body-sm text-on-surface-variant opacity-80 italic">
                             <span className="text-primary/40 mr-1.5">›</span>
-                            No direct anomaly signals detected from currently visible evidence.
+                            Şu anki görünür kanıtlardan doğrudan anomali sinyali algılanmadı.
                         </div>
                     )}
                 </div>

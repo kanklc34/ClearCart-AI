@@ -28,21 +28,21 @@ class ReasoningService:
         
         OUTPUT FORMAT (Strict JSON):
         {{
-            "executive_summary": "A concise (2-3 sentences) professional summary of the audit.",
+            "executive_summary": "Denetimin 2-3 cümlelik profesyonel özeti (Türkçe).",
             "strongest_signals": [
-                {{ "label": "Short name of signal", "confidence": 0.0-1.0 }},
-                {{ "label": "Short name of signal", "confidence": 0.0-1.0 }},
-                {{ "label": "Short name of signal", "confidence": 0.0-1.0 }}
+                {{ "label": "Sinyalin kısa adı (Türkçe)", "confidence": 0.0-1.0 }},
+                {{ "label": "Sinyalin kısa adı (Türkçe)", "confidence": 0.0-1.0 }},
+                {{ "label": "Sinyalin kısa adı (Türkçe)", "confidence": 0.0-1.0 }}
             ],
             "uncertainty_drivers": [
-                "Driver 1 (e.g. partial text visibility)",
-                "Driver 2"
+                "Belirsizlik Etkeni 1 (örn: kısmi metin görünürlüğü) (Türkçe)",
+                "Belirsizlik Etkeni 2 (Türkçe)"
             ],
             "anomalies": [
-                "Anomaly 1 (e.g. price inconsistent with category floor)",
-                "Anomaly 2"
+                "Anomali 1 (örn: fiyat kategori tabanıyla uyumsuz) (Türkçe)",
+                "Anomali 2 (Türkçe)"
             ],
-            "counter_inference": "Briefly mention if any signal suggests authenticity despite red flags (or vice versa)."
+            "counter_inference": "Kırmızı bayraklara rağmen orijinalliği destekleyen bir sinyal varsa kısaca belirt (yoksa boş bırak) (Türkçe)."
         }}
         
         Ensure the JSON is valid and only return the JSON block.
@@ -62,11 +62,11 @@ class ReasoningService:
             logger.error(f"Reasoning generation failed: {e}")
             # Fallback to empty structure
             return {
-                "executive_summary": "Technical audit completed. See individual module signals for details.",
+                "executive_summary": "Teknik denetim tamamlandı. Ayrıntılar için modül sinyallerine bakın.",
                 "strongest_signals": [],
-                "uncertainty_drivers": ["Generic epistemic variance"],
+                "uncertainty_drivers": ["Genel epistemik varyans"],
                 "anomalies": [],
-                "counter_inference": "None identified."
+                "counter_inference": "Belirlenmedi."
             }
 
 reasoning_service = ReasoningService()

@@ -51,7 +51,7 @@ export const MetadataVectors: React.FC<MetadataVectorsProps> = ({
     return (
         <div className="w-full h-full border border-outline-variant bg-surface-container-low flex flex-col">
             <div className="p-4 border-b border-outline-variant bg-surface flex justify-between items-center">
-                <div className="text-label-caps font-label-caps text-primary tracking-widest">METADATA_VECTORS</div>
+                <div className="text-label-caps font-label-caps text-primary tracking-widest">METAVERİ_VEKTÖRLERİ</div>
                 <div className="flex gap-1">
                     <div className="w-1 h-1 bg-primary rounded-full"></div>
                     <div className="w-1 h-1 bg-primary/40 rounded-full"></div>
@@ -59,15 +59,15 @@ export const MetadataVectors: React.FC<MetadataVectorsProps> = ({
             </div>
             
             <div className="p-6 flex flex-col gap-6">
-                <VectorMeter label="Signal Coverage" value={coverage} />
-                <VectorMeter label="Evidence Density" value={evidenceDensity} />
-                <VectorMeter label="Epistemic Stability" value={uncertainty} isInverted warningThreshold={0.4} />
+                <VectorMeter label="Sinyal Kapsamı" value={coverage} />
+                <VectorMeter label="Kanıt Yoğunluğu" value={evidenceDensity} />
+                <VectorMeter label="Epistemik İstikrar" value={uncertainty} isInverted warningThreshold={0.4} />
                 
                 {/* Correlation Risk Section */}
                 <div className={`mt-2 p-4 border ${highCorrelation ? 'border-tertiary/30 bg-tertiary/5' : 'border-outline-variant/20 bg-surface/30'} transition-all duration-500`}>
                     <div className="flex items-center justify-between mb-3">
                         <div className="text-[10px] font-label-caps text-on-surface-variant opacity-70">
-                            SIGNAL_CORRELATION
+                            SİNYAL_KORELASYONU
                         </div>
                         {highCorrelation && <ShieldAlert size={12} className="text-tertiary animate-pulse" />}
                     </div>
@@ -88,7 +88,7 @@ export const MetadataVectors: React.FC<MetadataVectorsProps> = ({
 
                     {highCorrelation && (
                         <div className="mt-3 text-[9px] font-body-sm text-tertiary leading-tight opacity-80">
-                            WARNING: High signal correlation detected. Independent verification strength is reduced.
+                            UYARI: Yüksek sinyal korelasyonu algılandı. Bağımsız doğrulama gücü azaldı.
                         </div>
                     )}
                 </div>
@@ -96,7 +96,7 @@ export const MetadataVectors: React.FC<MetadataVectorsProps> = ({
 
             <div className="mt-auto p-4 border-t border-outline-variant/30 bg-surface/20">
                 <div className="text-[9px] font-body-sm text-on-surface-variant/50 italic leading-tight">
-                    * Vectors derived from inter-agent consensus variance and feature-dependency overlap.
+                    * Vektörler, ajanlar arası konsensüs varyansı ve özellik bağımlılığı çakışmasından elde edilmiştir.
                 </div>
             </div>
         </div>

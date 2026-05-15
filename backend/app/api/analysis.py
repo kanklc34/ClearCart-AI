@@ -99,7 +99,6 @@ def _build_frontend_result(
         )
 
     # ── Module Signal List (4 modül) ─────────────────────────────────────────
-    # Kategori skorlarını modüllere map et
     cat_legal = categories.get("legal", {})
     cat_financial = categories.get("financial", {})
     cat_trust = categories.get("trust", {})
@@ -118,7 +117,7 @@ def _build_frontend_result(
     module_signal_list = [
         {
             "id": "integrity_checker",
-            "label": "Data Integrity",
+            "label": "Veri Bütünlüğü",
             "dimension": "integrity",
             "score": cat_legal.get("score", overall_score),
             "findings": integrity_findings,
@@ -128,7 +127,7 @@ def _build_frontend_result(
         },
         {
             "id": "market_validator",
-            "label": "Market Plausibility",
+            "label": "Pazar Uygunluğu",
             "dimension": "market",
             "score": cat_financial.get("score", overall_score),
             "findings": [
@@ -144,7 +143,7 @@ def _build_frontend_result(
         },
         {
             "id": "pressure_signal_detector",
-            "label": "Behavioral Pressure",
+            "label": "Davranışsal Baskı",
             "dimension": "pressure",
             "score": cat_trust.get("score", overall_score),
             "findings": [f"⚠ {d}" for d in devils.get("dark_patterns", [])[:3]],
@@ -154,7 +153,7 @@ def _build_frontend_result(
         },
         {
             "id": "listing_auditor",
-            "label": "Listing Quality",
+            "label": "İlan Kalitesi",
             "dimension": "listing",
             "score": cat_safety.get("score", overall_score),
             "findings": judge.get("critical_bullets", [])[:3],
@@ -230,7 +229,6 @@ def _build_frontend_result(
             "module_signal_list": module_signal_list,
             "consensus_factors": consensus_factors,
             "reasoning": reasoning,
-            # Ham veriler de saklanıyor (RAW_DUMP sekmesi için)
             "_raw": {
                 "advocate": advocate,
                 "devils_advocate": devils,
@@ -247,11 +245,16 @@ def _build_frontend_result(
 async def scan_product(request: AnalysisRequest):
     async def event_generator():
         try:
-            # ── ADIM 1: URL Doğrulama ──────────────────────────────────────
-            yield sse("Orchestrator", "URL yapısı ve platform doğrulanıyor...")
+            # ── ADIM 1+2: URL Doğrulama ve Kazıma Paralel ──────────────────
+            yield sse("Orchestrator", "URL doğrulanıyor ve veri çekiliyor...")
 
             orchestrator = OrchestratorAgent()
-            strategy = await orchestrator.run(request.url)
+            
+            # Orchestrator ve Scraper'ı aynı anda başlat
+            strategy_task = orchestrator.run(request.url)
+            scrape_task = scraper_service.scrape_url(request.url)
+            
+            strategy, content = await asyncio.gather(strategy_task, scrape_task)
 
             if not strategy.get("is_product_page") or strategy.get("is_scam"):
                 error = (
@@ -265,14 +268,8 @@ async def scan_product(request: AnalysisRequest):
             platform = strategy.get("platform", "Bilinmeyen")
             yield sse(
                 "Orchestrator",
-                f"✓ {platform.upper()} ürün sayfası doğrulandı. Denetim başlıyor.",
+                f"✓ {platform.upper()} verisi çekildi. Denetim başlıyor.",
             )
-            await asyncio.sleep(0.3)
-
-            # ── ADIM 2: Scraping ───────────────────────────────────────────
-            yield sse("Scraper", "Sayfa içeriği ve politikalar ayıklanıyor...")
-
-            content = await scraper_service.scrape_url(request.url)
 
             if not content:
                 yield sse_error(
@@ -329,7 +326,7 @@ async def scan_product(request: AnalysisRequest):
             yield sse(
                 "Judge", f"✓ Denetim tamamlandı. Karar: {final.get('verdict', '?')}"
             )
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(0.3)
 
             # ── FINAL: Veriyi frontend formatına dönüştür ──────────────────
             frontend_result = _build_frontend_result(

@@ -1,0 +1,327 @@
+{
+  "audit": {
+    "overall_score": 10,
+    "recommendation": "AVOID",
+    "score_breakdown": [
+      {
+        "factor": "Yorum Manipülasyonu",
+        "impact": "-30",
+        "explanation": "Açıkça belirtilen yorum teşviki, ürünün tüm olumlu değerlendirmelerinin ve popülerlik göstergelerinin güvenilirliğini temelden sarsmaktadır."
+      },
+      {
+        "factor": "Eksik Sağlık Bilgisi",
+        "impact": "-30",
+        "explanation": "Bitkisel bir karışım için alerjenler, ilaç etkileşimleri ve özel durumlar (hamile/emziren) için hayati güvenlik bilgilerinin olmaması ciddi bir sağlık riskidir."
+      },
+      {
+        "factor": "Gizli Koşullu Kampanyalar",
+        "impact": "-20",
+        "explanation": "Cazip görünen 'Kargo Bedava' ve 'Kupon Fırsatı' gibi kampanyaların yüksek alt limitlerle sunulması ve '2 Al 1 Öde' gibi tekliflerin eksik uygulanma iddiaları finansal yanıltıcılık içermektedir."
+      },
+      {
+        "factor": "Abartılı Satış Sayıları/FOMO",
+        "impact": "-10",
+        "explanation": "'3 günde 5B+ ürün satıldı' gibi belirsiz ve abartılı ifadelerle yaratılan fırsat kaçırma korkusu (FOMO), tüketicileri aceleci ve manipülatif kararlara itmektedir."
+      }
+    ],
+    "key_findings": [
+      "Ürünün pozitif yorumları, satıcının 'yorum yazın hediye vercem' vaadiyle teşvik edildiği iddia edildiği için güvenilir değildir, bu durum genel '3.9' puana ve 'En Çok Satılan #1' konumuna şüphe düşürmektedir.",
+      "'KARGO BEDAVA' ve '100 TL Kupon Fırsatı!' gibi cazip görünen teklifler, sırasıyla '350 TL' ve '1.250 TL' gibi yüksek alt limitler içermektedir. Ayrıca, '2 Al 1 Öde' kampanyasının eksik uygulandığına dair kullanıcı yorumu bulunmaktadır.",
+      "Bitkisel bir ürün olmasına rağmen, içeriği, potansiyel alerjenler, ilaç etkileşimleri (tiroid, tansiyon ilaçları) veya hamile/emziren anneler için uygunluğu gibi hayati güvenlik bilgileri ürün sayfasında açıkça belirtilmemiştir, bu da ciddi sağlık riskleri oluşturabilir.",
+      "'3 günde 5B+ ürün satıldı!', '28,1B kişinin sepetinde, tükenmeden al!' gibi ifadelerle tüketicide aciliyet ve fırsatı kaçırma korkusu yaratılmaya çalışılmaktadır; 'B' kısaltmasının 'Bin' veya 'Milyar' olduğu belirsizliği, satış rakamlarının abartılabileceğini düşündürmektedir."
+    ],
+    "confidence_note": {
+      "level": "NOMINAL",
+      "reason": "Normal analiz"
+    },
+    "evidence_log": [
+      {
+        "type": "negative",
+        "dimension": "Yorum Manipülasyonu",
+        "message": "Açıkça belirtilen yorum teşviki, ürünün tüm olumlu değerlendirmelerinin ve popülerlik göstergelerinin güvenilirliğini temelden sarsmaktadır.",
+        "impact": -30
+      },
+      {
+        "type": "negative",
+        "dimension": "Eksik Sağlık Bilgisi",
+        "message": "Bitkisel bir karışım için alerjenler, ilaç etkileşimleri ve özel durumlar (hamile/emziren) için hayati güvenlik bilgilerinin olmaması ciddi bir sağlık riskidir.",
+        "impact": -30
+      },
+      {
+        "type": "negative",
+        "dimension": "Gizli Koşullu Kampanyalar",
+        "message": "Cazip görünen 'Kargo Bedava' ve 'Kupon Fırsatı' gibi kampanyaların yüksek alt limitlerle sunulması ve '2 Al 1 Öde' gibi tekliflerin eksik uygulanma iddiaları finansal yanıltıcılık içermektedir.",
+        "impact": -20
+      },
+      {
+        "type": "negative",
+        "dimension": "Abartılı Satış Sayıları/FOMO",
+        "message": "'3 günde 5B+ ürün satıldı' gibi belirsiz ve abartılı ifadelerle yaratılan fırsat kaçırma korkusu (FOMO), tüketicileri aceleci ve manipülatif kararlara itmektedir.",
+        "impact": -10
+      },
+      {
+        "type": "positive",
+        "dimension": "ADVOCATE",
+        "message": "Ürün, 'Diğer Bitki Çayları' kategorisinde 'En Çok Satılan #1' konumunda olup, sadece 3 günde '5B+ ürün satıldığı' bilgisiyle pazar liderliğini ve yüksek talebini kanıtlamaktadır.",
+        "impact": 5
+      },
+      {
+        "type": "positive",
+        "dimension": "ADVOCATE",
+        "message": "Müşterilere 'KARGO BEDAVA', '100 TL Kupon Fırsatı', '350 TL ve Üzeri Kargo Bedava', 'DILAN150 kodu ile 1000 TL'ye 150 TL İndirim' ve en önemlisi '2 Al 1 Öde' gibi birden fazla, oldukça cazip finansal avantaj ve kampanya sunulmaktadır.",
+        "impact": 5
+      },
+      {
+        "type": "positive",
+        "dimension": "ADVOCATE",
+        "message": "Ürün, '1069 Değerlendirme' ile '3.9' gibi olumlu bir genel puana sahip olmasının yanı sıra, '28,1B kişinin sepetinde' ve '39B kişi favoriledi' gibi yüksek müşteri ilgisi göstergeleriyle güçlü bir toplumsal kanıt ve güven ortamı sunmaktadır. Satıcının '859,5B Takipçi' sayısına sahip olması ve müşteri sorularına '21 dakika içinde' gibi çok hızlı yanıt vermesi de güveni artırmaktadır.",
+        "impact": 5
+      },
+      {
+        "type": "negative",
+        "dimension": "DEVIL_ADV",
+        "message": "**Yorum Manipülasyonu ve Güvenilmez Değerlendirmeler:** Ürün değerlendirmeleri kısmında bir kullanıcının açıkça belirttiği üzere ('POZİTİF YORUMLARI, YORUM YAZIN HEDİYE VERCEM DEDİĞİ İÇİN YAZIP BİZİ KANDIRIYORLAR KI'), satıcının pozitif yorumları teşvik etmek için hediye gibi vaatlerde bulunarak değerlendirme sistemini manipüle ettiği iddia edilmektedir. Bu durum, ürünün genel '3.9' puanı ve 'En Çok Satılan #1' ibaresi gibi popülerlik göstergelerinin güvenilirliğini ciddi şekilde zedelemektedir.",
+        "impact": -5
+      },
+      {
+        "type": "negative",
+        "dimension": "DEVIL_ADV",
+        "message": "**Gizli Koşullar ve Yanıltıcı Kampanyalar:** 'KARGO BEDAVA' ve '100 TL Kupon Fırsatı!' gibi cazip görünen teklifler, sayfada daha az görünür yerlerde belirtilen yüksek alt limitler ('350 TL ve Üzeri Kargo Bedava', 'Alt Limit 1.250 TL') ile birlikte sunulmaktadır. Ayrıca, '2 Al 1 Öde' kampanyası olmasına rağmen bir kullanıcının ('N** K**') sadece 1 ürün aldığını belirtmesi, kampanya şartlarının yanıltıcı olabileceğine veya doğru uygulanmadığına işaret etmektedir, bu da ürün iadesi veya eksik ürünle ilgili sorunlara yol açabilir.",
+        "impact": -5
+      },
+      {
+        "type": "negative",
+        "dimension": "DEVIL_ADV",
+        "message": "**Eksik ve Yetersiz Sağlık/Güvenlik Bilgileri:** Bitkisel bir karışım olmasına rağmen, ürün sayfasında içeriği, potansiyel alerjenler, ilaç etkileşimleri (örn. tiroid, tansiyon ilaçları) veya hamile/emziren anneler için uygunluğu gibi hayati güvenlik bilgileri kolayca erişilebilir bir şekilde sunulmamaktadır. Bu tür kritik bilgiler için tüketicilerin soru-cevap bölümüne başvurması veya 'doktorunuza danışın' yönlendirmesi, ürünün potansiyel sağlık riskleri hakkında yeterli şeffaflık olmadığını göstermektedir.",
+        "impact": -5
+      }
+    ],
+    "module_signal_list": [
+      {
+        "id": "integrity_checker",
+        "label": "Veri Bütünlüğü",
+        "dimension": "integrity",
+        "score": 15,
+        "findings": [
+          "Açıkça belirtilen yorum teşviki, ürünün tüm olumlu değerlendirmelerinin ve popülerlik göstergelerinin güvenilirliğini temelden sarsmaktadır.",
+          "Bitkisel bir karışım için alerjenler, ilaç etkileşimleri ve özel durumlar (hamile/emziren) için hayati güvenlik bilgilerinin olmaması ciddi bir sağlık riskidir.",
+          "Cazip görünen 'Kargo Bedava' ve 'Kupon Fırsatı' gibi kampanyaların yüksek alt limitlerle sunulması ve '2 Al 1 Öde' gibi tekliflerin eksik uygulanma iddiaları finansal yanıltıcılık içermektedir."
+        ],
+        "confidence": 0.95,
+        "evidence_density": 1.0,
+        "uncertainty": 0.15
+      },
+      {
+        "id": "market_validator",
+        "label": "Pazar Uygunluğu",
+        "dimension": "market",
+        "score": 20,
+        "findings": [
+          "Ürün, 'Diğer Bitki Çayları' kategorisinde 'En Çok Satılan #1' konumunda olup, sadece 3 günde '5B+ ürün satıldığı' bilgisiyle pazar liderliğini ve yüksek talebini kanıtlamaktadır.",
+          "Müşterilere 'KARGO BEDAVA', '100 TL Kupon Fırsatı', '350 TL ve Üzeri Kargo Bedava', 'DILAN150 kodu ile 1000 TL'ye 150 TL İndirim' ve en önemlisi '2 Al 1 Öde' gibi birden fazla, oldukça cazip finansal avantaj ve kampanya sunulmaktadır."
+        ],
+        "confidence": 0.75,
+        "evidence_density": 0.6,
+        "uncertainty": 0.2
+      },
+      {
+        "id": "pressure_signal_detector",
+        "label": "Davranışsal Baskı",
+        "dimension": "pressure",
+        "score": 10,
+        "findings": [
+          "⚠ **Urgency/Scarcity (FOMO - Fırsatı Kaçırma Korkusu):** '3 günde 5B+ ürün satıldı!' (Billion/Bin anlamına gelen 'B' kullanımı belirsiz ve abartılı), '28,1B kişinin sepetinde, tükenmeden al!', 'Popüler ürün! Son 24 saatte 17,8B kişi görüntüledi!' gibi ifadelerle tüketicide acelecilik ve satın alma baskısı yaratılmaktadır.",
+          "⚠ **Hidden Costs/Conditions (Gizli Maliyetler/Koşullar):** 'KARGO BEDAVA' ve '100 TL Kupon Fırsatı!' gibi ana başlıklarda belirtilen avantajların, alt limitler ('350 TL ve Üzeri', 'Alt Limit 1.250 TL') gibi önemli kısıtlamalarla gelmesi, tüketicinin beklentilerini yanıltabilir ve beklenmedik ek maliyetlere yol açabilir.",
+          "⚠ **Incentivized/Fake Reviews (Teşvik Edilmiş/Sahte Yorumlar):** Bir kullanıcı yorumunda belirtildiği üzere, satıcının 'yorum yazın hediye vercem' vaadiyle olumlu yorumları teşvik etmesi, değerlendirme sistemini manipüle ederek ürünün algılanan kalitesini yapay olarak yükseltmek amacı taşımaktadır."
+        ],
+        "confidence": 0.95,
+        "evidence_density": 0.6,
+        "uncertainty": 0.25
+      },
+      {
+        "id": "listing_auditor",
+        "label": "İlan Kalitesi",
+        "dimension": "listing",
+        "score": 5,
+        "findings": [
+          "Ürünün pozitif yorumları, satıcının 'yorum yazın hediye vercem' vaadiyle teşvik edildiği iddia edildiği için güvenilir değildir, bu durum genel '3.9' puana ve 'En Çok Satılan #1' konumuna şüphe düşürmektedir.",
+          "'KARGO BEDAVA' ve '100 TL Kupon Fırsatı!' gibi cazip görünen teklifler, sırasıyla '350 TL' ve '1.250 TL' gibi yüksek alt limitler içermektedir. Ayrıca, '2 Al 1 Öde' kampanyasının eksik uygulandığına dair kullanıcı yorumu bulunmaktadır.",
+          "Bitkisel bir ürün olmasına rağmen, içeriği, potansiyel alerjenler, ilaç etkileşimleri (tiroid, tansiyon ilaçları) veya hamile/emziren anneler için uygunluğu gibi hayati güvenlik bilgileri ürün sayfasında açıkça belirtilmemiştir, bu da ciddi sağlık riskleri oluşturabilir."
+        ],
+        "confidence": 0.65,
+        "evidence_density": 0.5,
+        "uncertainty": 0.3
+      }
+    ],
+    "consensus_factors": {
+      "coverage": 0.8333333333333334,
+      "evidence_density": 0.6,
+      "uncertainty": 0.2,
+      "correlation_risk": 0.15
+    },
+    "reasoning": {
+      "executive_summary": "Bu ürünü satın almamanız şiddetle tavsiye edilir. Sunulan cazip fırsatlar ve popülerlik göstergeleri ciddi güvenilirlik, finansal ve sağlık riskleri barındırmaktadır.",
+      "strongest_signals": [
+        {
+          "label": "Kategorisinde 'En Çok Satılan #1' olması.",
+          "confidence": 0.85
+        },
+        {
+          "label": "3 günde '5B+ ürün satıldı' ve '28,1B kişinin sepetinde' gibi yüksek satış ve ilgi metrikleri.",
+          "confidence": 0.85
+        },
+        {
+          "label": "**Urgency/Scarcity (FOMO - Fırsatı Kaçırma Korkusu):** '3 günde 5B+ ürün satıldı!' (Billion/Bin anlamına gelen 'B' kullanımı belirsiz ve abartılı), '28,1B kişinin sepetinde, tükenmeden al!', 'Popüler ürün! Son 24 saatte 17,8B kişi görüntüledi!' gibi ifadelerle tüketicide acelecilik ve satın alma baskısı yaratılmaktadır.",
+          "confidence": 0.8
+        }
+      ],
+      "uncertainty_drivers": [
+        "Şeytanın Avukatı'nın (Devil's Advocate) sunduğu argümanlar, Savunmacı'nın (Advocate) ileri sürdüğü güven ve avantaj iddialarını temelden çürütmektedir. Özellikle bir kullanıcı yorumunda doğrudan belirtilen 'yorum yazın hediye vercem' vaadiyle yapılan yorum manipülasyonu, ürünün 'En Çok Satılan #1' konumu ve '3.9' puanı gibi tüm olumlu göstergelerin güvenilirliğini ciddi şekilde sarsmaktadır. Bitkisel bir ürün olmasına rağmen, içeriği ve potansiyel sağlık etkileşimleri hakkında hayati bilgilerin eksikliği büyük bir güvenlik riski oluşturmaktadır. Ayrıca, cazip görünen kampanyaların arkasındaki yüksek alt limitler ve '2 Al 1 Öde' gibi kampanyaların eksik uygulandığı iddiaları, finansal yanıltıcılık içermektedir. Bu nedenlerle, riskler avantajlardan çok daha ağır basmaktadır."
+      ],
+      "anomalies": [
+        "⚠ **Urgency/Scarcity (FOMO - Fırsatı Kaçırma Korkusu):** '3 günde 5B+ ürün satıldı!' (Billion/Bin anlamına gelen 'B' kullanımı belirsiz ve abartılı), '28,1B kişinin sepetinde, tükenmeden al!', 'Popüler ürün! Son 24 saatte 17,8B kişi görüntüledi!' gibi ifadelerle tüketicide acelecilik ve satın alma baskısı yaratılmaktadır.",
+        "⚠ **Hidden Costs/Conditions (Gizli Maliyetler/Koşullar):** 'KARGO BEDAVA' ve '100 TL Kupon Fırsatı!' gibi ana başlıklarda belirtilen avantajların, alt limitler ('350 TL ve Üzeri', 'Alt Limit 1.250 TL') gibi önemli kısıtlamalarla gelmesi, tüketicinin beklentilerini yanıltabilir ve beklenmedik ek maliyetlere yol açabilir.",
+        "⚠ **Incentivized/Fake Reviews (Teşvik Edilmiş/Sahte Yorumlar):** Bir kullanıcı yorumunda belirtildiği üzere, satıcının 'yorum yazın hediye vercem' vaadiyle olumlu yorumları teşvik etmesi, değerlendirme sistemini manipüle ederek ürünün algılanan kalitesini yapay olarak yükseltmek amacı taşımaktadır.",
+        "Ürün Popülerliği ve Değerlendirmelerin Güvenilirliği",
+        "Kampanyaların Şeffaflığı ve Gerçekleştirilebilirliği"
+      ],
+      "counter_inference": "Şeytanın Avukatı'nın (Devil's Advocate) sunduğu argümanlar, Savunmacı'nın (Advocate) ileri sürdüğü güven ve avantaj iddialarını temelden çürütmektedir. Özellikle bir kullanıcı yorumunda doğrudan belirtilen 'yorum yazın hediye vercem' vaadiyle yapılan yorum manipülasyonu, ürünün 'En Çok Satılan #1' konumu ve '3.9' puanı gibi tüm olumlu göstergelerin güvenilirliğini ciddi şekilde sarsmaktadır. Bitkisel bir ürün olmasına rağmen, içeriği ve potansiyel sağlık etkileşimleri hakkında hayati bilgilerin eksikliği büyük bir güvenlik riski oluşturmaktadır. Ayrıca, cazip görünen kampanyaların arkasındaki yüksek alt limitler ve '2 Al 1 Öde' gibi kampanyaların eksik uygulandığı iddiaları, finansal yanıltıcılık içermektedir. Bu nedenlerle, riskler avantajlardan çok daha ağır basmaktadır."
+    },
+    "_raw": {
+      "advocate": {
+        "verdict": "AL",
+        "confidence": 95,
+        "top_arguments": [
+          "Ürün, 'Diğer Bitki Çayları' kategorisinde 'En Çok Satılan #1' konumunda olup, sadece 3 günde '5B+ ürün satıldığı' bilgisiyle pazar liderliğini ve yüksek talebini kanıtlamaktadır.",
+          "Müşterilere 'KARGO BEDAVA', '100 TL Kupon Fırsatı', '350 TL ve Üzeri Kargo Bedava', 'DILAN150 kodu ile 1000 TL'ye 150 TL İndirim' ve en önemlisi '2 Al 1 Öde' gibi birden fazla, oldukça cazip finansal avantaj ve kampanya sunulmaktadır.",
+          "Ürün, '1069 Değerlendirme' ile '3.9' gibi olumlu bir genel puana sahip olmasının yanı sıra, '28,1B kişinin sepetinde' ve '39B kişi favoriledi' gibi yüksek müşteri ilgisi göstergeleriyle güçlü bir toplumsal kanıt ve güven ortamı sunmaktadır. Satıcının '859,5B Takipçi' sayısına sahip olması ve müşteri sorularına '21 dakika içinde' gibi çok hızlı yanıt vermesi de güveni artırmaktadır."
+        ],
+        "trust_signals": [
+          "Kategorisinde 'En Çok Satılan #1' olması.",
+          "3 günde '5B+ ürün satıldı' ve '28,1B kişinin sepetinde' gibi yüksek satış ve ilgi metrikleri.",
+          "Satıcının '859,5B Takipçi' sayısıyla büyük ve aktif bir takipçi kitlesine sahip olması.",
+          "Satıcının müşteri sorularına ortalama '21-56 dakika içinde' gibi çok hızlı yanıt süreleri.",
+          "'3.9' puan ve '1069 Değerlendirme' ile kanıtlanmış genel müşteri memnuniyeti."
+        ],
+        "score_estimate": {
+          "legal": 85,
+          "financial": 95,
+          "trust": 95,
+          "safety": 80
+        },
+        "summary": "Bu ürün, pazar lideri konumu, cazip finansal kampanyaları ve yüksek müşteri güveni sayesinde kaçırılmaması gereken bir alışveriş fırsatıdır."
+      },
+      "devils_advocate": {
+        "verdict": "ALMA",
+        "confidence": 95,
+        "top_arguments": [
+          "**Yorum Manipülasyonu ve Güvenilmez Değerlendirmeler:** Ürün değerlendirmeleri kısmında bir kullanıcının açıkça belirttiği üzere ('POZİTİF YORUMLARI, YORUM YAZIN HEDİYE VERCEM DEDİĞİ İÇİN YAZIP BİZİ KANDIRIYORLAR KI'), satıcının pozitif yorumları teşvik etmek için hediye gibi vaatlerde bulunarak değerlendirme sistemini manipüle ettiği iddia edilmektedir. Bu durum, ürünün genel '3.9' puanı ve 'En Çok Satılan #1' ibaresi gibi popülerlik göstergelerinin güvenilirliğini ciddi şekilde zedelemektedir.",
+          "**Gizli Koşullar ve Yanıltıcı Kampanyalar:** 'KARGO BEDAVA' ve '100 TL Kupon Fırsatı!' gibi cazip görünen teklifler, sayfada daha az görünür yerlerde belirtilen yüksek alt limitler ('350 TL ve Üzeri Kargo Bedava', 'Alt Limit 1.250 TL') ile birlikte sunulmaktadır. Ayrıca, '2 Al 1 Öde' kampanyası olmasına rağmen bir kullanıcının ('N** K**') sadece 1 ürün aldığını belirtmesi, kampanya şartlarının yanıltıcı olabileceğine veya doğru uygulanmadığına işaret etmektedir, bu da ürün iadesi veya eksik ürünle ilgili sorunlara yol açabilir.",
+          "**Eksik ve Yetersiz Sağlık/Güvenlik Bilgileri:** Bitkisel bir karışım olmasına rağmen, ürün sayfasında içeriği, potansiyel alerjenler, ilaç etkileşimleri (örn. tiroid, tansiyon ilaçları) veya hamile/emziren anneler için uygunluğu gibi hayati güvenlik bilgileri kolayca erişilebilir bir şekilde sunulmamaktadır. Bu tür kritik bilgiler için tüketicilerin soru-cevap bölümüne başvurması veya 'doktorunuza danışın' yönlendirmesi, ürünün potansiyel sağlık riskleri hakkında yeterli şeffaflık olmadığını göstermektedir."
+        ],
+        "dark_patterns": [
+          "**Urgency/Scarcity (FOMO - Fırsatı Kaçırma Korkusu):** '3 günde 5B+ ürün satıldı!' (Billion/Bin anlamına gelen 'B' kullanımı belirsiz ve abartılı), '28,1B kişinin sepetinde, tükenmeden al!', 'Popüler ürün! Son 24 saatte 17,8B kişi görüntüledi!' gibi ifadelerle tüketicide acelecilik ve satın alma baskısı yaratılmaktadır.",
+          "**Hidden Costs/Conditions (Gizli Maliyetler/Koşullar):** 'KARGO BEDAVA' ve '100 TL Kupon Fırsatı!' gibi ana başlıklarda belirtilen avantajların, alt limitler ('350 TL ve Üzeri', 'Alt Limit 1.250 TL') gibi önemli kısıtlamalarla gelmesi, tüketicinin beklentilerini yanıltabilir ve beklenmedik ek maliyetlere yol açabilir.",
+          "**Incentivized/Fake Reviews (Teşvik Edilmiş/Sahte Yorumlar):** Bir kullanıcı yorumunda belirtildiği üzere, satıcının 'yorum yazın hediye vercem' vaadiyle olumlu yorumları teşvik etmesi, değerlendirme sistemini manipüle ederek ürünün algılanan kalitesini yapay olarak yükseltmek amacı taşımaktadır."
+        ],
+        "rebuttals": [],
+        "regret_scenarios": [
+          "Ürünün '100 TL Kupon Fırsatı!' gibi cazip görünen indirimini kullanmak için '1.250 TL' alt limitine ulaşmak amacıyla gereğinden fazla ürün satın alıp, sonradan ihtiyacı olmayan veya etkisini görmediği bir ürüne fazladan para ödemek.",
+          "'2 Al 1 Öde' kampanyasına güvenerek sipariş verip, kullanıcı yorumunda belirtildiği gibi eksik (sadece 1 ürün) teslimatla karşılaşmak ve iade/değişim süreçleriyle uğraşmak zorunda kalmak.",
+          "Bitkisel içeriği hakkında yeterli bilgiye sahip olmadan veya mevcut sağlık durumu/kullandığı ilaçlarla olası etkileşimleri göz ardı ederek ürünü satın almak ve potansiyel sağlık sorunları yaşamak."
+        ],
+        "score_estimate": {
+          "legal": 30,
+          "financial": 40,
+          "trust": 10,
+          "safety": 20
+        },
+        "summary": "Bu ürün, yorum manipülasyonu iddiaları, gizli koşullara sahip yanıltıcı kampanyalar ve sağlıkla ilgili kritik bilgilerin eksikliği nedeniyle tüketiciler için güvenilirlik, finansal ve sağlık riskleri taşımaktadır."
+      },
+      "judge": {
+        "overall_score": 10,
+        "trust_adjusted_score": 0.5,
+        "verdict": "ALMA",
+        "advocate_advice": "Bu ürünü satın almamanız şiddetle tavsiye edilir. Sunulan cazip fırsatlar ve popülerlik göstergeleri ciddi güvenilirlik, finansal ve sağlık riskleri barındırmaktadır.",
+        "debate_winner": "devils_advocate",
+        "debate_clash_points": [
+          "Ürün Popülerliği ve Değerlendirmelerin Güvenilirliği",
+          "Kampanyaların Şeffaflığı ve Gerçekleştirilebilirliği",
+          "Ürün İçeriği ve Sağlık Güvenliği Bilgilerinin Yeterliliği"
+        ],
+        "debate_summary": "Şeytanın Avukatı'nın (Devil's Advocate) sunduğu argümanlar, Savunmacı'nın (Advocate) ileri sürdüğü güven ve avantaj iddialarını temelden çürütmektedir. Özellikle bir kullanıcı yorumunda doğrudan belirtilen 'yorum yazın hediye vercem' vaadiyle yapılan yorum manipülasyonu, ürünün 'En Çok Satılan #1' konumu ve '3.9' puanı gibi tüm olumlu göstergelerin güvenilirliğini ciddi şekilde sarsmaktadır. Bitkisel bir ürün olmasına rağmen, içeriği ve potansiyel sağlık etkileşimleri hakkında hayati bilgilerin eksikliği büyük bir güvenlik riski oluşturmaktadır. Ayrıca, cazip görünen kampanyaların arkasındaki yüksek alt limitler ve '2 Al 1 Öde' gibi kampanyaların eksik uygulandığı iddiaları, finansal yanıltıcılık içermektedir. Bu nedenlerle, riskler avantajlardan çok daha ağır basmaktadır.",
+        "score_breakdown": [
+          {
+            "factor": "Yorum Manipülasyonu",
+            "impact": "-30",
+            "explanation": "Açıkça belirtilen yorum teşviki, ürünün tüm olumlu değerlendirmelerinin ve popülerlik göstergelerinin güvenilirliğini temelden sarsmaktadır."
+          },
+          {
+            "factor": "Eksik Sağlık Bilgisi",
+            "impact": "-30",
+            "explanation": "Bitkisel bir karışım için alerjenler, ilaç etkileşimleri ve özel durumlar (hamile/emziren) için hayati güvenlik bilgilerinin olmaması ciddi bir sağlık riskidir."
+          },
+          {
+            "factor": "Gizli Koşullu Kampanyalar",
+            "impact": "-20",
+            "explanation": "Cazip görünen 'Kargo Bedava' ve 'Kupon Fırsatı' gibi kampanyaların yüksek alt limitlerle sunulması ve '2 Al 1 Öde' gibi tekliflerin eksik uygulanma iddiaları finansal yanıltıcılık içermektedir."
+          },
+          {
+            "factor": "Abartılı Satış Sayıları/FOMO",
+            "impact": "-10",
+            "explanation": "'3 günde 5B+ ürün satıldı' gibi belirsiz ve abartılı ifadelerle yaratılan fırsat kaçırma korkusu (FOMO), tüketicileri aceleci ve manipülatif kararlara itmektedir."
+          }
+        ],
+        "critical_bullets": [
+          "Ürünün pozitif yorumları, satıcının 'yorum yazın hediye vercem' vaadiyle teşvik edildiği iddia edildiği için güvenilir değildir, bu durum genel '3.9' puana ve 'En Çok Satılan #1' konumuna şüphe düşürmektedir.",
+          "'KARGO BEDAVA' ve '100 TL Kupon Fırsatı!' gibi cazip görünen teklifler, sırasıyla '350 TL' ve '1.250 TL' gibi yüksek alt limitler içermektedir. Ayrıca, '2 Al 1 Öde' kampanyasının eksik uygulandığına dair kullanıcı yorumu bulunmaktadır.",
+          "Bitkisel bir ürün olmasına rağmen, içeriği, potansiyel alerjenler, ilaç etkileşimleri (tiroid, tansiyon ilaçları) veya hamile/emziren anneler için uygunluğu gibi hayati güvenlik bilgileri ürün sayfasında açıkça belirtilmemiştir, bu da ciddi sağlık riskleri oluşturabilir.",
+          "'3 günde 5B+ ürün satıldı!', '28,1B kişinin sepetinde, tükenmeden al!' gibi ifadelerle tüketicide aciliyet ve fırsatı kaçırma korkusu yaratılmaya çalışılmaktadır; 'B' kısaltmasının 'Bin' veya 'Milyar' olduğu belirsizliği, satış rakamlarının abartılabileceğini düşündürmektedir."
+        ],
+        "regret_forecast": {
+          "probability": "90%",
+          "reason": "Yorum manipülasyonu nedeniyle ürün kalitesi beklentilerinin karşılanmaması, yanıltıcı kampanyalar yüzünden gereksiz harcama yapma veya eksik ürünle karşılaşma, ve en önemlisi eksik sağlık bilgisi nedeniyle potansiyel sağlık sorunları yaşama riskleri çok yüksektir."
+        },
+        "categories": {
+          "legal": {
+            "score": 15,
+            "status": "danger",
+            "note": "Yorum manipülasyonu ve yanıltıcı kampanya koşulları tüketiciyi yanıltma açısından yasal sorunlara yol açabilir."
+          },
+          "financial": {
+            "score": 20,
+            "status": "danger",
+            "note": "Gizli koşullar, yüksek alt limitler ve eksik uygulanan kampanyalar tüketicinin finansal olarak mağduriyetine neden olabilir."
+          },
+          "trust": {
+            "score": 10,
+            "status": "danger",
+            "note": "Teşvik edilmiş yorumlar, abartılı satış rakamları ve şeffaf olmayan bilgiler güven ortamını tamamen zedelemektedir."
+          },
+          "safety": {
+            "score": 5,
+            "status": "danger",
+            "note": "Bitkisel bir ürün için kritik sağlık ve güvenlik bilgilerinin eksikliği kabul edilemez bir risktir ve potansiyel sağlık sorunlarına yol açabilir."
+          }
+        },
+        "platform_audit": "E-ticaret platformunun, kullanıcı yorumlarının teşvik edilmesine ve manipülasyona açık olmasına, ayrıca bitkisel ürünler gibi sağlıkla ilgili hayati bilgilerin eksik bırakılmasına izin vermesi, tüketici güvenliğini ve şeffaflığı ciddi şekilde zedelemektedir. Platform, 'B' gibi belirsiz kısaltmalarla oluşturulan abartılı satış rakamlarının denetlenmesi ve Dark Pattern'ların önüne geçilmesi konusunda da yetersiz kalmaktadır."
+      },
+      "platform": "trendyol",
+      "is_blocked": false
+    }
+  },
+  "extraction_meta": {
+    "structured_data_found": true,
+    "text_length": 0,
+    "html_length": 0,
+    "is_blocked": false,
+    "platform": "trendyol",
+    "grounding_trace": {
+      "advocate_confidence": "95%",
+      "devils_confidence": "95%",
+      "debate_winner": "devils_advocate",
+      "score_breakdown_items": 4
+    },
+    "grounding_explanation": "Şeytanın Avukatı'nın (Devil's Advocate) sunduğu argümanlar, Savunmacı'nın (Advocate) ileri sürdüğü güven ve avantaj iddialarını temelden çürütmektedir. Özellikle bir kullanıcı yorumunda doğrudan belirtilen 'yorum yazın hediye vercem' vaadiyle yapılan yorum manipülasyonu, ürünün 'En Çok Satılan #1' konumu ve '3.9' puanı gibi tüm olumlu göstergelerin güvenilirliğini ciddi şekilde sarsmaktadır. Bitkisel bir ürün olmasına rağmen, içeriği ve potansiyel sağlık etkileşimleri hakkında hayati bilgilerin eksikliği büyük bir güvenlik riski oluşturmaktadır. Ayrıca, cazip görünen kampanyaların arkasındaki yüksek alt limitler ve '2 Al 1 Öde' gibi kampanyaların eksik uygulandığı iddiaları, finansal yanıltıcılık içermektedir. Bu nedenlerle, riskler avantajlardan çok daha ağır basmaktadır."
+  }
+}

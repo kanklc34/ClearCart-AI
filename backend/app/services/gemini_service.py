@@ -8,9 +8,10 @@ load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
 # Model öncelik sırası: en iyi → en hızlı (sadece Gemini modelleri)
 MODELS = [
+    "gemini-1.5-flash",
+    "gemini-2.0-flash",
     "gemini-2.5-flash",
     "gemini-2.5-pro",
-    "gemini-2.0-flash",
     "gemini-2.0-flash-lite",
     "gemini-2.5-flash-lite",
     "gemini-3.0-flash",

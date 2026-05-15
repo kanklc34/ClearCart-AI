@@ -52,13 +52,13 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({ activeTab, onTabChange, is
                 ) : (
                     <div className="flex items-center gap-2 text-on-surface-variant opacity-40">
                         <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block" />
-                        IDLE
+                        BOŞTA
                     </div>
                 )}
                 <div className="hidden md:flex items-center gap-1 text-on-surface-variant opacity-30 text-[10px]">
-                    <span>gemini-2.5-flash-lite</span>
+                    <span>gemini-1.5-flash</span>
                     <span className="mx-1">·</span>
-                    <span>3 agents</span>
+                    <span>3 ajan</span>
                 </div>
             </div>
         </header>

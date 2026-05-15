@@ -29,13 +29,13 @@ export const DecisionLogic: React.FC<DecisionLogicProps> = ({
                     className={`cursor-pointer transition-all ${view === 'LOGIC' ? 'opacity-100 border-b border-primary pb-1' : 'opacity-40 hover:opacity-60'}`}
                     onClick={() => setView('LOGIC')}
                 >
-                    DECISION_LOGIC
+                    KARAR_MANTIĞI
                 </span>
                 <span
                     className={`cursor-pointer transition-all ${view === 'RAW' ? 'opacity-100 border-b border-primary pb-1' : 'opacity-40 hover:opacity-60'}`}
                     onClick={() => setView('RAW')}
                 >
-                    RAW_DUMP
+                    HAM_VERİ_DÖKÜMÜ
                 </span>
             </div>
 
@@ -46,7 +46,7 @@ export const DecisionLogic: React.FC<DecisionLogicProps> = ({
                     {/* Kolon 1: Strongest Signals */}
                     <div className="p-5 flex flex-col gap-4">
                         <h4 className="text-label-caps font-label-caps text-on-surface-variant">
-                            STRONGEST_SIGNALS
+                            EN_GÜÇLÜ_SİNYALLER
                         </h4>
                         <ul className="flex flex-col gap-3">
                             {strongestSignals.length > 0 ? (
@@ -62,7 +62,7 @@ export const DecisionLogic: React.FC<DecisionLogicProps> = ({
                                 ))
                             ) : (
                                 <li className="text-body-sm font-body-sm text-on-surface-variant opacity-50">
-                                    No signals detected
+                                    Sinyal algılanmadı
                                 </li>
                             )}
                         </ul>
@@ -72,7 +72,7 @@ export const DecisionLogic: React.FC<DecisionLogicProps> = ({
                     <div className="p-5 flex flex-col gap-4">
                         <h4 className="text-label-caps font-label-caps text-on-surface-variant flex items-center gap-2">
                             <span className="w-1.5 h-1.5 bg-error block shrink-0"></span>
-                            UNCERTAINTY_DRIVERS
+                            BELİRSİZLİK_ETKENLERİ
                         </h4>
                         <div className="text-body-sm font-body-sm text-on-surface-variant leading-relaxed flex flex-col gap-2">
                             {uncertaintyDrivers.length > 0 ? (
@@ -83,7 +83,7 @@ export const DecisionLogic: React.FC<DecisionLogicProps> = ({
                                     </div>
                                 ))
                             ) : (
-                                <div className="opacity-50">&gt; No uncertainty factors detected</div>
+                                <div className="opacity-50">&gt; Belirsizlik faktörü algılanmadı</div>
                             )}
                         </div>
                     </div>
@@ -91,7 +91,7 @@ export const DecisionLogic: React.FC<DecisionLogicProps> = ({
                     {/* Kolon 3: Isolated Anomalies */}
                     <div className="p-5 flex flex-col gap-4">
                         <h4 className="text-label-caps font-label-caps text-on-surface-variant">
-                            ISOLATED_ANOMALIES
+                            İZOLE_ANOMALİLER
                         </h4>
                         {anomalies.length > 0 ? (
                             <div className="flex flex-col gap-2">
@@ -105,7 +105,7 @@ export const DecisionLogic: React.FC<DecisionLogicProps> = ({
                             </div>
                         ) : (
                             <div className="text-body-sm font-body-sm text-on-surface-variant opacity-50">
-                                No significant anomalies detected
+                                Önemli bir anomali algılanmadı
                             </div>
                         )}
                     </div>

@@ -29,10 +29,10 @@ export const RiskMatricesTab: React.FC<RiskMatricesTabProps> = ({
             <div className="max-w-6xl mx-auto space-y-12">
                 {/* Header */}
                 <div className="border-b border-outline-variant pb-8">
-                    <div className="text-label-caps font-label-caps text-primary mb-2">RISK_MATRICES_V1</div>
-                    <h1 className="text-4xl font-headline-md text-on-surface tracking-tight">Evidence Hypothesis Space</h1>
+                    <div className="text-label-caps font-label-caps text-primary mb-2">RİSK_MATRİSLERİ_V1</div>
+                    <h1 className="text-4xl font-headline-md text-on-surface tracking-tight">Kanıt Hipotez Alanı</h1>
                     <p className="text-body-md text-on-surface-variant mt-4 max-w-2xl">
-                        A granular breakdown of all signal-to-evidence mappings. Positive impact signals strengthen the "Authentic" hypothesis, while negative impacts increase the "Risk" probability.
+                        Tüm sinyal-kanıt eşlemelerinin ayrıntılı dökümü. Pozitif etki sinyalleri "Güvenilir" hipotezini güçlendirirken, negatif etkiler "Risk" olasılığını artırır.
                     </p>
                 </div>
 
@@ -41,7 +41,7 @@ export const RiskMatricesTab: React.FC<RiskMatricesTabProps> = ({
                     <div className="lg:col-span-4 space-y-6">
                         <div className="flex items-center gap-3 text-primary">
                             <Activity size={20} />
-                            <div className="text-label-caps font-label-caps font-bold">STABILITY_METRICS</div>
+                            <div className="text-label-caps font-label-caps font-bold">İSTİKRAR_METRİKLERİ</div>
                         </div>
 
                         <div className="bg-surface-container-low border border-outline-variant p-6 space-y-6 relative overflow-hidden">
@@ -49,7 +49,7 @@ export const RiskMatricesTab: React.FC<RiskMatricesTabProps> = ({
                                 <div className="space-y-6 flex-1">
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-baseline">
-                                            <span className="text-[11px] font-label-caps text-on-surface-variant opacity-60">EVIDENCE_DENSITY</span>
+                                            <span className="text-[11px] font-label-caps text-on-surface-variant opacity-60">KANIT_YOĞUNLUĞU</span>
                                             <span className="text-xl font-data-mono text-primary">{(consensusFactors?.evidence_density || 0.4).toFixed(2)}</span>
                                         </div>
                                         <div className="h-1.5 w-full bg-outline-variant/20 rounded-full overflow-hidden">
@@ -59,7 +59,7 @@ export const RiskMatricesTab: React.FC<RiskMatricesTabProps> = ({
 
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-baseline">
-                                            <span className="text-[11px] font-label-caps text-on-surface-variant opacity-60">CORRELATION_RISK</span>
+                                            <span className="text-[11px] font-label-caps text-on-surface-variant opacity-60">KORELASYON_RİSKİ</span>
                                             <span className="text-xl font-data-mono text-error">{(consensusFactors?.correlation_risk || 0.1).toFixed(2)}</span>
                                         </div>
                                         <div className="h-1.5 w-full bg-outline-variant/20 rounded-full overflow-hidden">
@@ -93,19 +93,19 @@ export const RiskMatricesTab: React.FC<RiskMatricesTabProps> = ({
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="text-[9px] font-label-caps text-on-surface-variant opacity-50 mt-2">CONSENSUS_STABILITY</div>
+                                    <div className="text-[9px] font-label-caps text-on-surface-variant opacity-50 mt-2">KONSENSÜS_İSTİKRARI</div>
                                 </div>
                             </div>
 
                             <div className="pt-6 border-t border-outline-variant/30 flex justify-between">
                                 <div className="text-center">
-                                    <div className="text-[10px] font-label-caps text-on-surface-variant opacity-60">POSITIVE_SIG</div>
+                                    <div className="text-[10px] font-label-caps text-on-surface-variant opacity-60">POZİTİF_SİNYAL</div>
                                     <div className="text-2xl font-data-mono text-tertiary-fixed-dim">
                                         {evidenceLog.filter(e => e.impact > 0).length}
                                     </div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-[10px] font-label-caps text-on-surface-variant opacity-60">NEGATIVE_SIG</div>
+                                    <div className="text-[10px] font-label-caps text-on-surface-variant opacity-60">NEGATİF_SİNYAL</div>
                                     <div className="text-2xl font-data-mono text-error">
                                         {evidenceLog.filter(e => e.impact < 0).length}
                                     </div>
@@ -116,11 +116,11 @@ export const RiskMatricesTab: React.FC<RiskMatricesTabProps> = ({
                         <div className="p-4 bg-tertiary/5 border border-tertiary/20 flex gap-4 items-start">
                             <BarChart3 size={16} className="text-tertiary mt-0.5 shrink-0" />
                             <p className="text-[10px] text-on-surface-variant leading-relaxed italic">
-                                <strong>Consensus Note:</strong> Agent agreement is currently rated as 
+                                <strong>Konsensüs Notu:</strong> Ajan mutabakatı şu an şu seviyededir: 
                                 <span className="text-primary font-bold ml-1">
-                                    {(1 - (consensusFactors?.uncertainty || 0.2) > 0.7) ? "HIGH" : "MODERATE"}
+                                    {(1 - (consensusFactors?.uncertainty || 0.2) > 0.7) ? "YÜKSEK" : "ORTA"}
                                 </span>.
-                                Multiple independent agents have cross-verified the primary signals.
+                                Birden fazla bağımsız ajan ana sinyalleri çapraz doğrulamıştır.
                             </p>
                         </div>
                     </div>
@@ -129,24 +129,24 @@ export const RiskMatricesTab: React.FC<RiskMatricesTabProps> = ({
                     <div className="lg:col-span-8 space-y-6">
                         <div className="flex items-center gap-3 text-primary">
                             <Fingerprint size={20} />
-                            <div className="text-label-caps font-label-caps font-bold">EVIDENCE_Hypothesis_MAP</div>
+                            <div className="text-label-caps font-label-caps font-bold">KANIT_HİPOTEZ_HARİTASI</div>
                         </div>
 
                         <div className="bg-surface-container-low border border-outline-variant rounded-sm overflow-hidden">
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="bg-surface text-[10px] font-label-caps text-on-surface-variant/60 border-b border-outline-variant">
-                                        <th className="px-4 py-3 font-bold">TYPE</th>
-                                        <th className="px-4 py-3 font-bold">DIMENSION</th>
-                                        <th className="px-4 py-3 font-bold">OBSERVED_EVIDENCE</th>
-                                        <th className="px-4 py-3 font-bold text-right">IMPACT</th>
+                                        <th className="px-4 py-3 font-bold">TÜR</th>
+                                        <th className="px-4 py-3 font-bold">BOYUT</th>
+                                        <th className="px-4 py-3 font-bold">GÖZLEMLENEN_KANIT</th>
+                                        <th className="px-4 py-3 font-bold text-right">ETKİ</th>
                                     </tr>
                                 </thead>
                                 <tbody className="text-[11px] font-data-mono divide-y divide-outline-variant/30">
                                     {sortedEvidence.length === 0 ? (
                                         <tr>
                                             <td colSpan={4} className="px-4 py-20 text-center text-on-surface-variant opacity-30 italic">
-                                                NO_AUDIT_EVIDENCE_LOGGED
+                                                DENETİM_KANITI_KAYDEDİLMEDİ
                                             </td>
                                         </tr>
                                     ) : (
