@@ -6,8 +6,8 @@ from loguru import logger
 class JudgeAgent(BaseAgent):
     """
     Hakem ajan.
-    Advocate ve Devil's Advocate'in tüm argümanlarını dinler,
-    tartışmanın çarpıştığı noktaları saptar ve tarafsız final karar verir.
+    Advocate ve Devil's Advocate'in argümanlarını tartarak
+    tarafsız final karar ve skor gerekçesi üretir.
     """
 
     def __init__(self):
@@ -20,6 +20,9 @@ class JudgeAgent(BaseAgent):
         advocate_result: dict,
         devils_result: dict,
     ) -> dict:
+
+        is_blocked = "ERROR_PLATFORM_BLOCKED" in product_content
+
         prompt = f"""
         Sen bağımsız bir tüketici hakları hakemisin. İki tarafı dinledin:
 
@@ -36,13 +39,18 @@ class JudgeAgent(BaseAgent):
         Pişmanlık Senaryoları: {json.dumps(devils_result.get("regret_scenarios", []), ensure_ascii=False)}
         Özet: {devils_result.get("summary")}
 
+        {"⚠️ UYARI: Platform veri erişimini engelledi — şeffaflık ihlali. Bu skoru aşağı çek." if is_blocked else ""}
+
         Kullanıcı Profili: {user_context}
         Ürün İçeriği (ek referans): {product_content[:2000]}
 
         Görevin:
         1. Hangi tarafın argümanları daha güçlü kanıta dayanıyor?
-        2. Çarpışma noktalarını (ikisinin çeliştiği yerler) belirle
+        2. Çarpışma noktalarını belirle
         3. Tarafsız final karar ver
+        4. "score_breakdown" alanında skoru etkileyen 3-4 somut faktörü belirt:
+           - Her faktör için kısa isim, +/- etkisi ve bir cümle açıklama yaz
+           - Bu kullanıcının "neden bu skor?" sorusunu cevaplamalı
 
         Yanıtı SADECE şu JSON formatında ver:
         {{
@@ -56,6 +64,13 @@ class JudgeAgent(BaseAgent):
                 "İki tarafın çeliştiği kritik nokta 2"
             ],
             "debate_summary": "Tartışmanın özeti — hangi argüman daha güçlüydü ve neden",
+            "score_breakdown": [
+                {{
+                    "factor": "Kısa faktör adı",
+                    "impact": "+10" | "-15" (artı veya eksi puan etkisi),
+                    "explanation": "Neden bu etkiyi yaptı — 1 cümle"
+                }}
+            ],
             "critical_bullets": [
                 "Kullanıcının bilmesi gereken en kritik 3-5 madde"
             ],
@@ -84,5 +99,6 @@ class JudgeAgent(BaseAgent):
                 "verdict": "DİKKAT",
                 "advocate_advice": "Analiz tamamlanamadı, dikkatli olun.",
                 "debate_summary": "Hakem analizi başarısız oldu.",
+                "score_breakdown": [],
                 "critical_bullets": ["Sistem hatası oluştu."],
             }
