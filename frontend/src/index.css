@@ -1,32 +1,108 @@
 @import "tailwindcss";
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@theme {
+  --color-tertiary-fixed-dim: #bec6e0;
+  --color-surface-container-low: #1c1b1b;
+  --color-tertiary-fixed: #dae2fd;
+  --color-primary: #ffffff;
+  --color-surface-container: #201f1f;
+  --color-on-tertiary-fixed-variant: #3f465c;
+  --color-surface-bright: #3a3939;
+  --color-surface-container-high: #2a2a2a;
+  --color-primary-fixed: #e0e3e5;
+  --color-on-secondary: #213145;
+  --color-inverse-primary: #5c5f61;
+  --color-on-primary-container: #626567;
+  --color-on-tertiary-container: #5c647a;
+  --color-inverse-on-surface: #313030;
+  --color-on-secondary-fixed-variant: #38485d;
+  --color-outline-variant: #444749;
+  --color-primary-container: #e0e3e5;
+  --color-error: #ffb4ab;
+  --color-on-surface: #e5e2e1;
+  --color-outline: #8e9193;
+  --color-on-primary: #2d3133;
+  --color-surface-container-highest: #353535;
+  --color-on-tertiary-fixed: #131b2e;
+  --color-secondary-fixed: #d3e4fe;
+  --color-background: #131313;
+  --color-on-primary-fixed-variant: #444749;
+  --color-tertiary-container: #dae2fd;
+  --color-on-secondary-container: #a9bad3;
+  --color-on-tertiary: #283044;
+  --color-surface-dim: #131313;
+  --color-inverse-surface: #e5e2e1;
+  --color-secondary-container: #3a4a5f;
+  --color-on-primary-fixed: #191c1e;
+  --color-on-secondary-fixed: #0b1c30;
+  --color-on-error: #690005;
+  --color-primary-fixed-dim: #c4c7c9;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-surface-variant: #353535;
+  --color-surface-tint: #c4c7c9;
+  --color-on-surface-variant: #c4c7c9;
+  --color-secondary: #b7c8e1;
+  --color-secondary-fixed-dim: #b7c8e1;
+  --color-on-error-container: #ffdad6;
+  --color-surface: #131313;
+  --color-tertiary: #ffffff;
+  --color-on-background: #e5e2e1;
+  --color-error-container: #93000a;
+
+  --font-headline-lg: "Geist", sans-serif;
+  --font-headline-md: "Geist", sans-serif;
+  --font-headline-sm: "Geist", sans-serif;
+  --font-data-mono-lg: "JetBrains Mono", monospace;
+  --font-body-md: "JetBrains Mono", monospace;
+  --font-body-sm: "JetBrains Mono", monospace;
+  --font-label-caps: "JetBrains Mono", monospace;
+
+  --radius-default: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  
+  --spacing-gutter: 16px;
+  --spacing-density-spacious: 12px;
+  --spacing-margin: 24px;
+  --spacing-unit: 4px;
+  --spacing-density-compact: 4px;
 }
 
-:root {
-  font-family: 'DM Mono', 'Courier New', monospace;
-  background-color: #04060f;
-  color: #e2e8f0;
+@utility uncertainty-pattern {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    var(--color-outline-variant) 2px,
+    var(--color-outline-variant) 4px
+  );
+  opacity: 0.3;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background-color: #04060f;
+@utility tech-grid-bg {
+  background-size: 16px 16px;
+  background-image: linear-gradient(to right, rgba(68, 71, 73, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(68, 71, 73, 0.1) 1px, transparent 1px);
+}
+
+@layer base {
+  * {
+    @apply border-outline-variant;
+  }
+  body {
+    @apply bg-background text-on-surface font-body-md;
+  }
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  @apply bg-surface-container-lowest;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  @apply bg-outline-variant/50 rounded-full hover:bg-outline;
 }

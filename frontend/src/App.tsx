@@ -1,112 +1,161 @@
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { AlertTriangle, RefreshCw, Search, FileSearch, Loader2 } from 'lucide-react';
+import {
+  SideNavBar,
+  TopAppBar,
+  RiskModule,
+  DecisionHeader,
+  MetadataVectors,
+  DecisionLogic,
+  SignalPipeline,
+  LogicExplorer,
+  DiagnosticPanel,
+  ApiLogsTab,
+  RiskMatricesTab,
+} from './components';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
 
-// ── Types ──────────────────────────────────────────────────────────────────
-interface AgentThought {
+type Recommendation = 'SAFE' | 'VERIFY' | 'AVOID';
+
+interface ProgressEvent {
   agent: string;
   thought: string;
-  data?: Record<string, unknown>;
 }
 
-interface AdvocateResult {
-  verdict: string;
-  confidence: number;
-  top_arguments: string[];
-  trust_signals: string[];
-  score_estimate: Record<string, number>;
-  summary: string;
+interface ConfidenceNote {
+  level: string;
+  reason: string;
 }
 
-interface DevilsResult {
-  verdict: string;
-  confidence: number;
-  top_arguments: string[];
-  dark_patterns: string[];
-  rebuttals: string[];
-  regret_scenarios: string[];
-  score_estimate: Record<string, number>;
-  summary: string;
+interface EvidenceLogItem {
+  type: string;
+  dimension: string;
+  message: string;
+  impact: number;
 }
 
-interface JudgeResult {
+interface ConsensusFactors {
+  coverage?: number;
+  evidence_density?: number;
+  uncertainty?: number;
+  correlation_risk?: number;
+}
+
+interface ModuleSignal {
+  id: string;
+  label: string;
+  dimension: string;
+  score?: number;
+  findings?: string[];
+  confidence?: number;
+  coverage?: number;
+  evidence_density?: number;
+  uncertainty?: number;
+}
+
+interface ExtractionMeta {
+  structured_data_found: boolean;
+  text_length: number;
+  html_length: number;
+  is_blocked: boolean;
+  platform: string;
+  grounding_trace: Record<string, string>;
+  grounding_explanation: string;
+}
+
+interface Reasoning {
+  executive_summary: string;
+  strongest_signals: { label: string; confidence: number }[];
+  uncertainty_drivers: string[];
+  anomalies: string[];
+  counter_inference: string;
+}
+
+interface RawData {
+  advocate: Record<string, unknown>;
+  devils_advocate: Record<string, unknown>;
+  judge: Record<string, unknown>;
+  platform: string;
+  is_blocked: boolean;
+}
+
+interface AuditResult {
   overall_score: number;
-  trust_adjusted_score: number;
-  verdict: 'AL' | 'DİKKAT' | 'ALMA';
-  advocate_advice: string;
-  debate_winner: string;
-  debate_clash_points: string[];
-  debate_summary: string;
-  critical_bullets: string[];
-  regret_forecast: { probability: string; reason: string };
-  categories: Record<string, { score: number; status: string; note: string }>;
-  platform_audit: string;
+  recommendation: Recommendation;
+  score_breakdown: Record<string, number>;
+  key_findings: string[];
+  confidence_note: ConfidenceNote;
+  evidence_log: EvidenceLogItem[];
+  module_signal_list?: ModuleSignal[];
+  module_signals?: ModuleSignal[] | Record<string, ModuleSignal>;
+  consensus_factors?: ConsensusFactors;
+  reasoning?: Reasoning;
+  _raw?: RawData;
 }
 
 interface FinalResult {
-  platform: string;
-  is_blocked: boolean;
-  advocate: AdvocateResult;
-  devils_advocate: DevilsResult;
-  judge: JudgeResult;
+  audit: AuditResult;
+  extraction_meta?: ExtractionMeta;
 }
 
-// ── Agent config ───────────────────────────────────────────────────────────
-const AGENT_META: Record<string, { label: string; color: string; icon: string }> = {
-  Orchestrator: { label: 'Orkestratör', color: '#94a3b8', icon: '◎' },
-  Scraper: { label: 'Veri Toplayıcı', color: '#38bdf8', icon: '⬡' },
-  Advocate: { label: 'Savunucu', color: '#34d399', icon: '▲' },
-  DevilsAdvocate: { label: 'İtirazcı', color: '#f87171', icon: '▼' },
-  Judge: { label: 'Hakem', color: '#fbbf24', icon: '⊕' },
-};
+const MODULE_CONFIG = [
+  { id: 'integrity_checker', title: 'BÜTÜNLÜK DENETİMİ', statusColor: 'error' as const },
+  { id: 'market_validator', title: 'PAZAR DOĞRULAMA', statusColor: 'tertiary-fixed-dim' as const },
+  { id: 'listing_auditor', title: 'LİSTE DENETİMİ', statusColor: 'outline-variant' as const },
+  { id: 'pressure_signal_detector', title: 'BASINÇ SİNYALİ', statusColor: 'tertiary-fixed-dim' as const },
+];
 
-// ── Helpers ────────────────────────────────────────────────────────────────
-const verdictConfig = {
-  AL: { bg: '#022c22', border: '#34d399', text: '#34d399', label: 'AL' },
-  DİKKAT: { bg: '#1c1400', border: '#fbbf24', text: '#fbbf24', label: 'DİKKAT' },
-  ALMA: { bg: '#1c0202', border: '#f87171', text: '#f87171', label: 'ALMA' },
-};
+type StepStatus = 'pending' | 'active' | 'completed';
 
-const catLabels: Record<string, string> = {
-  legal: 'Hukuki', financial: 'Finansal', trust: 'Güven', safety: 'Güvenlik',
-};
-
-function ScoreRing({ score, color }: { score: number; color: string }) {
-  const r = 28, circ = 2 * Math.PI * r;
-  const dash = (score / 100) * circ;
-  return (
-    <svg width="72" height="72" viewBox="0 0 72 72">
-      <circle cx="36" cy="36" r={r} fill="none" stroke="#1e293b" strokeWidth="6" />
-      <circle
-        cx="36" cy="36" r={r} fill="none" stroke={color} strokeWidth="6"
-        strokeDasharray={`${dash} ${circ - dash}`}
-        strokeDashoffset={circ / 4}
-        strokeLinecap="round"
-        style={{ transition: 'stroke-dasharray 1s ease' }}
-      />
-      <text x="36" y="41" textAnchor="middle" fill="white" fontSize="14" fontWeight="900" fontFamily="monospace">
-        {score}
-      </text>
-    </svg>
-  );
+function clampScore(score: number) {
+  return Math.max(0, Math.min(100, Math.round(score || 0)));
 }
 
-// ── Main App ───────────────────────────────────────────────────────────────
 export default function App() {
+  const [activeTab, setActiveTab] = useState('Audit Engine');
   const [url, setUrl] = useState('');
-  const [profile, setProfile] = useState({ prime: false, installments: false, student: false });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [thoughts, setThoughts] = useState<AgentThought[]>([]);
-  const [liveAdvocate, setLiveAdvocate] = useState<AdvocateResult | null>(null);
-  const [liveDevils, setLiveDevils] = useState<DevilsResult | null>(null);
+  const [activeStep, setActiveStep] = useState<string>('idle');
+  const [progress, setProgress] = useState<ProgressEvent[]>([]);
   const [result, setResult] = useState<FinalResult | null>(null);
   const [error, setError] = useState('');
-  const streamRef = useRef<boolean>(false);
+  const streamRef = useRef(false);
+  const logContainerRef = useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (logContainerRef.current) {
+      logContainerRef.current.scrollTo({
+        top: logContainerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [progress]);
+
+  const PIPELINE_STEPS = [
+    { id: 'capture', label: 'URL Doğrulama', key: 'Orchestrator' },
+    { id: 'integrity', label: 'Veri Çıkarma', key: 'Scraper' },
+    { id: 'market', label: 'Savunma Analizi', key: 'Advocate' },
+    { id: 'pressure', label: 'Risk Tespiti', key: 'DevilsAdvocate' },
+    { id: 'audit', label: 'Uzlaşma Hakemi', key: 'Judge' },
+  ];
+
+  const getStepStatus = (stepId: string): StepStatus => {
+    if (!isAnalyzing && !result) return 'pending';
+    if (result) return 'completed';
+    const currentIndex = PIPELINE_STEPS.findIndex(s => s.id === stepId);
+    const activeIndex = PIPELINE_STEPS.findIndex(s => s.id === activeStep);
+    if (stepId === activeStep) return 'active';
+    if (currentIndex < activeIndex) return 'completed';
+    return 'pending';
+  };
 
   const reset = () => {
-    setThoughts([]); setLiveAdvocate(null); setLiveDevils(null);
-    setResult(null); setError('');
+    streamRef.current = false;
+    setProgress([]);
+    setResult(null);
+    setError('');
+    setActiveStep('idle');
   };
 
   const handleAnalyze = async () => {
@@ -115,404 +164,280 @@ export default function App() {
     setIsAnalyzing(true);
     streamRef.current = true;
 
-    const userContext = `Prime: ${profile.prime}, Taksit: ${profile.installments}, Öğrenci: ${profile.student}`;
-
     try {
-      const res = await fetch(`${API_BASE}/api/analysis/scan`, {
+      const response = await fetch(`${API_BASE}/api/analysis/scan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: url.trim(), user_preferences: userContext }),
+        body: JSON.stringify({ url: url.trim(), user_preferences: 'general' }),
       });
 
-      if (!res.body) throw new Error('No stream');
-      const reader = res.body.getReader();
-      const dec = new TextDecoder();
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({})) as { message?: string };
+        throw new Error(errorData.message || `HTTP_ERROR_${response.status}`);
+      }
+
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
 
       while (streamRef.current) {
         const { value, done } = await reader.read();
         if (done) break;
-        const lines = dec.decode(value).split('\n');
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          try {
-            const parsed = JSON.parse(line.slice(6));
-            if (parsed.error) { setError(parsed.error); setIsAnalyzing(false); return; }
-            if (parsed.final) { setResult(parsed.result); setIsAnalyzing(false); return; }
-            if (parsed.agent) {
-              setThoughts(p => [...p, { agent: parsed.agent, thought: parsed.thought, data: parsed.data }]);
-              if (parsed.data?.advocate) setLiveAdvocate(parsed.data.advocate);
-              if (parsed.data?.devils_advocate) setLiveDevils(parsed.data.devils_advocate);
-            }
-          } catch {
-            // JSON parse hatası, devam et
+
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split('\n\n');
+        buffer = parts.pop() || '';
+
+        for (const part of parts) {
+          const lines = part.split('\n');
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith('data: ')) continue;
+            try {
+              const dataStr = trimmed.slice(6);
+              if (!dataStr) continue;
+              const parsed = JSON.parse(dataStr) as {
+                error?: string;
+                final?: boolean;
+                result?: FinalResult;
+                agent?: string;
+                thought?: string;
+              };
+
+              if (parsed.error) {
+                setError(parsed.error);
+                setIsAnalyzing(false);
+                streamRef.current = false;
+                return;
+              }
+              if (parsed.final && parsed.result) {
+                setResult(parsed.result);
+                setIsAnalyzing(false);
+                streamRef.current = false;
+                return;
+              }
+              if (parsed.agent && parsed.thought) {
+                const step = PIPELINE_STEPS.find(s => s.key === parsed.agent);
+                if (step) setActiveStep(step.id);
+                setProgress(items => [...items, { agent: parsed.agent!, thought: parsed.thought! }]);
+              }
+            } catch (e) { console.warn('SSE Parse Error:', e); }
           }
         }
       }
-    } catch {
-      setError('Bağlantı kurulamadı. Backend çalışıyor mu?');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred.';
+      setError(message);
     } finally {
       setIsAnalyzing(false);
+      streamRef.current = false;
     }
   };
 
+  const audit = result?.audit;
+  const moduleSignals: ModuleSignal[] = audit?.module_signal_list ??
+    (Array.isArray(audit?.module_signals)
+      ? (audit.module_signals as ModuleSignal[])
+      : audit?.module_signals
+        ? Object.values(audit.module_signals as Record<string, ModuleSignal>)
+        : []);
+
+  const getModuleSignal = (id: string) => moduleSignals.find(m => m.id === id);
+  const recValue: Recommendation = (audit?.recommendation ?? 'VERIFY') as Recommendation;
+
   return (
-    <div style={{ minHeight: '100vh', background: '#04060f', color: '#e2e8f0', fontFamily: "'DM Mono', 'Courier New', monospace", overflowX: 'hidden' }}>
+    <div className="dark min-h-screen bg-background text-on-surface">
+      <SideNavBar activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Ambient glow */}
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
-        <div style={{ position: 'absolute', top: '-20%', left: '50%', transform: 'translateX(-50%)', width: '80vw', height: '60vh', background: 'radial-gradient(ellipse, rgba(52,211,153,0.06) 0%, transparent 70%)', borderRadius: '50%' }} />
-      </div>
+      <main className="flex-1 md:ml-64 flex flex-col min-h-screen">
+        <TopAppBar activeTab={activeTab} onTabChange={setActiveTab} isAnalyzing={isAnalyzing} />
 
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '0 24px 80px' }}>
-
-        {/* ── Header ── */}
-        <header style={{ padding: '40px 0 60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ width: 44, height: 44, border: '2px solid #34d399', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>⊛</div>
-            <div>
-              <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: '-0.03em', color: '#fff' }}>
-                ClearCart<span style={{ color: '#34d399' }}>AI</span>
+        {activeTab === 'Logic Explorer' ? (
+          <LogicExplorer />
+        ) : activeTab === 'API Logs' ? (
+          <ApiLogsTab logs={progress} isAnalyzing={isAnalyzing} />
+        ) : activeTab === 'Risk Matrices' ? (
+          audit ? (
+            <RiskMatricesTab
+              evidenceLog={audit.evidence_log || []}
+              consensusFactors={audit.consensus_factors}
+            />
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center opacity-30">
+              <div className="text-label-caps font-label-caps tracking-[0.3em]">
+                NO_AUDIT_DATA — RUN A SCAN FIRST
               </div>
-              <div style={{ fontSize: 9, letterSpacing: '0.3em', color: '#475569', marginTop: 2 }}>COMMERCE TRUST LAYER</div>
             </div>
-          </div>
+          )
+        ) : (
+          <div className="flex-1 flex flex-col">
+            {/* Search Section */}
+            <section className="px-6 py-8 border-b border-outline-variant bg-surface-container-lowest">
+              <div className="max-w-4xl">
+                <div className="mb-6">
+                  <h2 className="text-3xl font-headline-md text-primary tracking-tight">Audit Engine</h2>
+                  <p className="text-body-md text-on-surface-variant mt-2">Deploy agentic consensus for marketplace trust verification.</p>
+                </div>
 
-          {/* Profile toggles */}
-          <div style={{ display: 'flex', gap: 8 }}>
-            {[
-              { key: 'prime', label: 'Prime' },
-              { key: 'installments', label: 'Taksit' },
-              { key: 'student', label: 'Öğrenci' },
-            ].map(({ key, label }) => (
-              <button
-                key={key}
-                onClick={() => setProfile(p => ({ ...p, [key]: !p[key as keyof typeof p] }))}
-                style={{
-                  padding: '7px 14px', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em',
-                  border: `1px solid ${profile[key as keyof typeof profile] ? '#34d399' : '#1e293b'}`,
-                  background: profile[key as keyof typeof profile] ? 'rgba(52,211,153,0.1)' : 'transparent',
-                  color: profile[key as keyof typeof profile] ? '#34d399' : '#475569',
-                  borderRadius: 8, cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'inherit',
-                }}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </header>
+                <div className="flex gap-3">
+                  <div className="flex-1 flex items-center gap-3 px-4 py-3 border border-outline-variant bg-surface-container-low rounded-sm focus-within:border-primary transition-colors">
+                    <FileSearch size={20} className="text-on-surface-variant shrink-0" />
+                    <input
+                      value={url}
+                      onChange={e => setUrl(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && handleAnalyze()}
+                      placeholder="Paste product listing URL (Amazon, Trendyol, AliExpress...)"
+                      className="flex-1 bg-transparent border-0 text-primary placeholder-on-surface-variant focus:outline-none text-body-md"
+                    />
+                  </div>
+                  <button
+                    onClick={handleAnalyze}
+                    disabled={isAnalyzing || !url.trim()}
+                    className="self-stretch px-8 bg-primary text-on-primary font-label-caps text-label-caps hover:opacity-90 disabled:opacity-50 transition-all flex items-center gap-3"
+                  >
+                    {isAnalyzing
+                      ? <><RefreshCw size={18} className="animate-spin" /> ANALYZING</>
+                      : <><Search size={18} /> SCAN</>}
+                  </button>
+                </div>
 
-        {/* ── Hero ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{ textAlign: 'center', marginBottom: 56 }}
-        >
-          <h1 style={{ fontSize: 'clamp(48px, 9vw, 96px)', fontWeight: 900, lineHeight: 0.9, letterSpacing: '-0.04em', color: '#fff', margin: '0 0 24px' }}>
-            SATMADAN ÖNCE<br />
-            <span style={{ color: '#34d399' }}>DENETİM.</span>
-          </h1>
-          <p style={{ fontSize: 16, color: '#475569', maxWidth: 480, margin: '0 auto 40px', lineHeight: 1.7 }}>
-            Üç bağımsız ajan tartışır — Savunucu, İtirazcı, Hakem.<br />
-            Platformun değil, sizin için çalışır.
-          </p>
-
-          {/* URL Input */}
-          <div style={{ maxWidth: 680, margin: '0 auto', position: 'relative' }}>
-            <div style={{
-              display: 'flex', gap: 0, border: '1px solid #1e293b',
-              borderRadius: 16, overflow: 'hidden', background: '#080d1a',
-              boxShadow: '0 0 0 1px rgba(52,211,153,0.0)',
-              transition: 'box-shadow 0.3s',
-            }}>
-              <input
-                value={url}
-                onChange={e => setUrl(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleAnalyze()}
-                placeholder="Ürün URL'sini yapıştırın..."
-                style={{
-                  flex: 1, background: 'transparent', border: 'none', outline: 'none',
-                  padding: '18px 20px', fontSize: 14, color: '#e2e8f0', fontFamily: 'inherit',
-                }}
-              />
-              <button
-                onClick={handleAnalyze}
-                disabled={isAnalyzing || !url.trim()}
-                style={{
-                  padding: '18px 32px', background: isAnalyzing ? '#0f1a2e' : '#34d399',
-                  border: 'none', color: isAnalyzing ? '#475569' : '#030a08',
-                  fontWeight: 900, fontSize: 13, letterSpacing: '0.1em',
-                  cursor: isAnalyzing || !url.trim() ? 'not-allowed' : 'pointer',
-                  fontFamily: 'inherit', transition: 'all 0.2s', whiteSpace: 'nowrap',
-                }}
-              >
-                {isAnalyzing ? '⟳ ANALİZ...' : 'DENETLE →'}
-              </button>
-            </div>
-            {error && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                style={{ marginTop: 12, color: '#f87171', fontSize: 13, textAlign: 'left', padding: '0 4px' }}>
-                ⚠ {error}
-              </motion.div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* ── Live Debate Stream ── */}
-        <AnimatePresence>
-          {(isAnalyzing || (thoughts.length > 0 && !result)) && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-              style={{ maxWidth: 680, margin: '0 auto 48px', border: '1px solid #0f172a', borderRadius: 20, overflow: 'hidden', background: '#060b18' }}
-            >
-              <div style={{ padding: '16px 20px', borderBottom: '1px solid #0f172a', display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#34d399', display: 'inline-block', animation: isAnalyzing ? 'pulse 1s infinite' : 'none' }} />
-                <span style={{ fontSize: 10, letterSpacing: '0.25em', color: '#475569' }}>CANLI AJAN AKIŞI</span>
-              </div>
-              <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 14, maxHeight: 320, overflowY: 'auto' }}>
-                {thoughts.map((t, i) => {
-                  const meta = AGENT_META[t.agent] || { label: t.agent, color: '#94a3b8', icon: '○' };
-                  return (
-                    <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
-                      style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                      <span style={{
-                        fontSize: 10, fontWeight: 700, letterSpacing: '0.1em',
-                        color: meta.color, border: `1px solid ${meta.color}33`,
-                        background: `${meta.color}11`, padding: '3px 8px', borderRadius: 6,
-                        whiteSpace: 'nowrap', minWidth: 100, textAlign: 'center',
-                      }}>
-                        {meta.icon} {meta.label}
-                      </span>
-                      <span style={{ fontSize: 12, color: '#64748b', lineHeight: 1.6, paddingTop: 2 }}>
-                        {t.thought}
-                      </span>
-                    </motion.div>
-                  );
-                })}
-                {isAnalyzing && (
-                  <div style={{ display: 'flex', gap: 4, paddingLeft: 4 }}>
-                    {[0, 1, 2].map(i => (
-                      <span key={i} style={{
-                        width: 4, height: 4, borderRadius: '50%', background: '#34d399',
-                        animation: `bounce 1.2s ${i * 0.2}s infinite`,
-                      }} />
-                    ))}
+                {error && (
+                  <div className="mt-4 p-4 border border-error bg-error/10 flex gap-3 animate-in fade-in slide-in-from-top-2">
+                    <AlertTriangle size={20} className="text-error shrink-0" />
+                    <div>
+                      <div className="text-label-caps font-bold text-error">SYSTEM_ERROR</div>
+                      <div className="text-body-sm text-on-surface mt-1">{error}</div>
+                    </div>
                   </div>
                 )}
               </div>
+            </section>
 
-              {/* Live debate preview while streaming */}
-              {(liveAdvocate || liveDevils) && (
-                <div style={{ borderTop: '1px solid #0f172a', padding: '16px 20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  {liveAdvocate && (
-                    <div style={{ background: 'rgba(52,211,153,0.05)', border: '1px solid rgba(52,211,153,0.15)', borderRadius: 12, padding: '12px 14px' }}>
-                      <div style={{ fontSize: 9, letterSpacing: '0.2em', color: '#34d399', marginBottom: 6 }}>▲ SAVUNUCU</div>
-                      <div style={{ fontSize: 11, color: '#94a3b8', lineHeight: 1.5 }}>{liveAdvocate.summary}</div>
-                      <div style={{ fontSize: 10, color: '#34d399', marginTop: 6, fontWeight: 700 }}>Güven: {liveAdvocate.confidence}%</div>
+            {/* Content Area */}
+            <div className="flex-1 flex flex-col">
+              {(isAnalyzing || (progress.length > 0 && !audit)) && (
+                <section className="p-6">
+                  <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8">
+                    <div className="md:col-span-4 border border-outline-variant bg-surface-container-low p-6">
+                      <div className="text-label-caps font-label-caps text-primary mb-6">AUDIT_PIPELINE</div>
+                      <SignalPipeline steps={PIPELINE_STEPS.map(s => ({ ...s, status: getStepStatus(s.id) }))} />
                     </div>
-                  )}
-                  {liveDevils && (
-                    <div style={{ background: 'rgba(248,113,113,0.05)', border: '1px solid rgba(248,113,113,0.15)', borderRadius: 12, padding: '12px 14px' }}>
-                      <div style={{ fontSize: 9, letterSpacing: '0.2em', color: '#f87171', marginBottom: 6 }}>▼ İTİRAZCI</div>
-                      <div style={{ fontSize: 11, color: '#94a3b8', lineHeight: 1.5 }}>{liveDevils.summary}</div>
-                      <div style={{ fontSize: 10, color: '#f87171', marginTop: 6, fontWeight: 700 }}>Risk: {liveDevils.confidence}%</div>
+                    <div className="md:col-span-8 border border-outline-variant bg-surface-container-low flex flex-col h-[500px]">
+                      <div className="p-4 border-b border-outline-variant bg-surface text-label-caps font-label-caps text-primary">AGENT_LOG_STREAM</div>
+                      <div ref={logContainerRef} className="p-6 space-y-4 overflow-y-auto scroll-smooth">
+                        {progress.map((event, idx) => (
+                          <div key={idx} className="flex gap-4 animate-in fade-in slide-in-from-left-4">
+                            <div className="w-1 h-1 bg-primary rounded-full mt-2.5 shrink-0" />
+                            <div>
+                              <div className="text-[10px] font-label-caps text-primary/70">{event.agent.toUpperCase()}</div>
+                              <div className="text-body-sm text-on-surface mt-1 leading-relaxed">{event.thought}</div>
+                            </div>
+                          </div>
+                        ))}
+                        {isAnalyzing && (
+                          <div className="flex items-center gap-3 text-primary/50 text-[10px] font-label-caps tracking-widest mt-4">
+                            <Loader2 size={12} className="animate-spin" /> PRODUCING_INFERENCE...
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                </section>
               )}
-            </motion.div>
-          )}
-        </AnimatePresence>
 
-        {/* ── Final Result ── */}
-        <AnimatePresence>
-          {result && (
-            <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              {(() => {
-                const j = result.judge;
-                const vc = verdictConfig[j.verdict] || verdictConfig['DİKKAT'];
+              {audit && (
+                <section className="p-6 animate-in fade-in duration-1000">
+                  <div className="max-w-7xl mx-auto grid grid-cols-12 gap-4">
 
-                return (
-                  <>
-                    {/* ── Verdict banner ── */}
-                    <div style={{
-                      border: `2px solid ${vc.border}`, borderRadius: 20,
-                      background: vc.bg, padding: '32px 40px',
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      flexWrap: 'wrap', gap: 20,
-                    }}>
-                      <div>
-                        <div style={{ fontSize: 10, letterSpacing: '0.3em', color: vc.text, marginBottom: 6 }}>HAKEM KARARI — {result.platform?.toUpperCase()}</div>
-                        <div style={{ fontSize: 'clamp(48px, 8vw, 72px)', fontWeight: 900, color: vc.text, lineHeight: 0.9, letterSpacing: '-0.03em' }}>
-                          {j.verdict}
-                        </div>
-                        <div style={{ marginTop: 12, fontSize: 15, color: '#e2e8f0', maxWidth: 520, lineHeight: 1.5 }}>
-                          {j.advocate_advice}
-                        </div>
-                      </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: 72, fontWeight: 900, color: vc.text, lineHeight: 1 }}>{j.overall_score}</div>
-                        <div style={{ fontSize: 10, letterSpacing: '0.2em', color: '#475569' }}>/ 100 PUAN</div>
-                        <div style={{ marginTop: 8, fontSize: 13, color: '#64748b' }}>
-                          Pişmanlık Riski: <span style={{ color: parseInt(j.regret_forecast.probability) > 50 ? '#f87171' : '#34d399', fontWeight: 700 }}>{j.regret_forecast.probability}</span>
-                        </div>
-                      </div>
+                    <div className="col-span-12">
+                      <DecisionHeader
+                        recommendation={recValue}
+                        globalScore={clampScore(audit.overall_score)}
+                        confidence={audit.consensus_factors?.uncertainty ? (1 - audit.consensus_factors.uncertainty) : 0.7}
+                        summary={audit.reasoning?.executive_summary}
+                      />
                     </div>
 
-                    {/* ── Debate: Advocate vs Devils ── */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                      {/* Advocate */}
-                      <div style={{ border: '1px solid rgba(52,211,153,0.2)', borderRadius: 16, padding: 24, background: 'rgba(52,211,153,0.03)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                          <span style={{ fontSize: 10, letterSpacing: '0.25em', color: '#34d399' }}>▲ SAVUNUCU</span>
-                          <span style={{ fontSize: 9, color: '#34d399', background: 'rgba(52,211,153,0.1)', padding: '2px 8px', borderRadius: 4 }}>
-                            {result.advocate.confidence}% güven
-                          </span>
-                          {result.judge.debate_winner === 'advocate' && (
-                            <span style={{ fontSize: 9, color: '#fbbf24', marginLeft: 'auto' }}>⊕ KAZANDI</span>
-                          )}
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                          {result.advocate.top_arguments.map((a, i) => (
-                            <div key={i} style={{ fontSize: 12, color: '#94a3b8', paddingLeft: 12, borderLeft: '2px solid rgba(52,211,153,0.3)', lineHeight: 1.5 }}>
-                              {a}
-                            </div>
-                          ))}
-                        </div>
-                        {result.advocate.trust_signals?.length > 0 && (
-                          <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(52,211,153,0.1)' }}>
-                            <div style={{ fontSize: 9, letterSpacing: '0.2em', color: '#475569', marginBottom: 8 }}>GÜVEN SİNYALLERİ</div>
-                            {result.advocate.trust_signals.map((s, i) => (
-                              <div key={i} style={{ fontSize: 11, color: '#34d399', marginBottom: 4 }}>✓ {s}</div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Devils Advocate */}
-                      <div style={{ border: '1px solid rgba(248,113,113,0.2)', borderRadius: 16, padding: 24, background: 'rgba(248,113,113,0.03)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                          <span style={{ fontSize: 10, letterSpacing: '0.25em', color: '#f87171' }}>▼ İTİRAZCI</span>
-                          <span style={{ fontSize: 9, color: '#f87171', background: 'rgba(248,113,113,0.1)', padding: '2px 8px', borderRadius: 4 }}>
-                            {result.devils_advocate.confidence}% risk
-                          </span>
-                          {result.judge.debate_winner === 'devils_advocate' && (
-                            <span style={{ fontSize: 9, color: '#fbbf24', marginLeft: 'auto' }}>⊕ KAZANDI</span>
-                          )}
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                          {result.devils_advocate.top_arguments.map((a, i) => (
-                            <div key={i} style={{ fontSize: 12, color: '#94a3b8', paddingLeft: 12, borderLeft: '2px solid rgba(248,113,113,0.3)', lineHeight: 1.5 }}>
-                              {a}
-                            </div>
-                          ))}
-                        </div>
-                        {result.devils_advocate.dark_patterns?.length > 0 && (
-                          <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(248,113,113,0.1)' }}>
-                            <div style={{ fontSize: 9, letterSpacing: '0.2em', color: '#475569', marginBottom: 8 }}>DARK PATTERNS</div>
-                            {result.devils_advocate.dark_patterns.map((d, i) => (
-                              <div key={i} style={{ fontSize: 11, color: '#f87171', marginBottom: 4 }}>⚠ {d}</div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* ── Clash Points ── */}
-                    {j.debate_clash_points?.length > 0 && (
-                      <div style={{ border: '1px solid #1e293b', borderRadius: 16, padding: 24, background: '#060b18' }}>
-                        <div style={{ fontSize: 9, letterSpacing: '0.3em', color: '#fbbf24', marginBottom: 16 }}>⊕ HAKEM — ÇARPIŞMA NOKTALARI</div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 10 }}>
-                          {j.debate_clash_points.map((p, i) => (
-                            <div key={i} style={{ fontSize: 12, color: '#94a3b8', padding: '10px 14px', background: 'rgba(251,191,36,0.04)', border: '1px solid rgba(251,191,36,0.1)', borderRadius: 10, lineHeight: 1.5 }}>
-                              {p}
-                            </div>
-                          ))}
-                        </div>
-                        <div style={{ marginTop: 16, fontSize: 12, color: '#64748b', lineHeight: 1.6, fontStyle: 'italic', borderTop: '1px solid #0f172a', paddingTop: 14 }}>
-                          "{j.debate_summary}"
-                        </div>
-                      </div>
-                    )}
-
-                    {/* ── Category scores ── */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
-                      {Object.entries(j.categories || {}).map(([key, cat]) => {
-                        const color = cat.status === 'good' ? '#34d399' : cat.status === 'warning' ? '#fbbf24' : '#f87171';
+                    <div className="col-span-12 grid grid-cols-12 gap-4 items-stretch">
+                      {MODULE_CONFIG.map(config => {
+                        const signal = getModuleSignal(config.id);
                         return (
-                          <div key={key} style={{ border: '1px solid #1e293b', borderRadius: 14, padding: '18px 16px', background: '#060b18', textAlign: 'center' }}>
-                            <ScoreRing score={cat.score} color={color} />
-                            <div style={{ fontSize: 10, letterSpacing: '0.2em', color: '#475569', marginTop: 8 }}>{catLabels[key] || key}</div>
-                            {cat.note && <div style={{ fontSize: 10, color: '#334155', marginTop: 4, lineHeight: 1.4 }}>{cat.note}</div>}
+                          <div key={config.id} className="col-span-12 sm:col-span-6 lg:col-span-3">
+                            <RiskModule
+                              title={config.title}
+                              score={signal?.score !== undefined ? clampScore(signal.score) : null}
+                              statusColor={config.statusColor}
+                              evidenceStrength={signal?.evidence_density || 0}
+                              findings={signal?.findings || []}
+                            />
                           </div>
                         );
                       })}
                     </div>
 
-                    {/* ── Critical bullets ── */}
-                    {j.critical_bullets?.length > 0 && (
-                      <div style={{ border: '1px solid #1e293b', borderRadius: 16, padding: 24, background: '#060b18' }}>
-                        <div style={{ fontSize: 9, letterSpacing: '0.3em', color: '#94a3b8', marginBottom: 16 }}>KRİTİK NOTLAR</div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 8 }}>
-                          {j.critical_bullets.map((b, i) => (
-                            <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '10px 14px', background: '#080d1a', borderRadius: 10, border: '1px solid #0f172a' }}>
-                              <span style={{ color: '#34d399', marginTop: 1, flexShrink: 0 }}>◈</span>
-                              <span style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.5 }}>{b}</span>
-                            </div>
-                          ))}
-                        </div>
+                    <div className="col-span-12 grid grid-cols-12 gap-4 items-start">
+                      <div className="col-span-12 lg:col-span-4">
+                        <MetadataVectors
+                          correlationRisk={audit.consensus_factors?.correlation_risk || 0.2}
+                          uncertainty={audit.consensus_factors?.uncertainty || 0.3}
+                          coverage={audit.consensus_factors?.coverage || 0.8}
+                          evidenceDensity={audit.consensus_factors?.evidence_density || 0.5}
+                        />
                       </div>
-                    )}
-
-                    {/* ── Regret forecast ── */}
-                    <div style={{ border: '1px solid #1e293b', borderRadius: 16, padding: '20px 24px', background: '#060b18', display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-                      <div>
-                        <div style={{ fontSize: 9, letterSpacing: '0.25em', color: '#475569', marginBottom: 4 }}>PİŞMANLIK TAHMİNİ</div>
-                        <div style={{ fontSize: 36, fontWeight: 900, color: parseInt(j.regret_forecast.probability) > 50 ? '#f87171' : '#34d399' }}>
-                          {j.regret_forecast.probability}
-                        </div>
-                      </div>
-                      <div style={{ flex: 1, fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>
-                        {j.regret_forecast.reason}
+                      <div className="col-span-12 lg:col-span-8 space-y-4">
+                        <DecisionLogic
+                          strongestSignals={
+                            audit.reasoning?.strongest_signals ||
+                            audit.key_findings.slice(0, 3).map(f => ({ label: f, confidence: 0.8 }))
+                          }
+                          uncertaintyDrivers={
+                            audit.reasoning?.uncertainty_drivers ||
+                            ['Partial feature overlap', 'Epistemic variance detected']
+                          }
+                          anomalies={
+                            audit.reasoning?.anomalies ||
+                            (audit.evidence_log.length > 0
+                              ? audit.evidence_log.filter(e => e.impact < 0).map(e => e.message)
+                              : audit.key_findings.filter(f => f.toLowerCase().includes('risk')).slice(0, 5))
+                          }
+                          rawAudit={audit._raw ?? audit}
+                        />
+                        {result.extraction_meta && (
+                          <DiagnosticPanel meta={result.extraction_meta} />
+                        )}
                       </div>
                     </div>
 
-                    {/* ── Platform audit ── */}
-                    {(j.platform_audit || result.is_blocked) && (
-                      <div style={{ border: `1px solid ${result.is_blocked ? 'rgba(248,113,113,0.3)' : '#1e293b'}`, borderRadius: 16, padding: '16px 24px', background: result.is_blocked ? 'rgba(248,113,113,0.04)' : '#060b18' }}>
-                        <div style={{ fontSize: 9, letterSpacing: '0.25em', color: result.is_blocked ? '#f87171' : '#475569', marginBottom: 8 }}>
-                          {result.is_blocked ? '⚠ PLATFORM VERİ ERİŞİMİNİ ENGELLEDİ' : 'PLATFORM DENETİMİ'}
-                        </div>
-                        <div style={{ fontSize: 12, color: '#64748b', lineHeight: 1.6 }}>{j.platform_audit}</div>
-                      </div>
-                    )}
-
-                    {/* New analysis button */}
-                    <div style={{ textAlign: 'center', paddingTop: 8 }}>
-                      <button onClick={() => { reset(); setUrl(''); }} style={{
-                        padding: '12px 28px', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
-                        border: '1px solid #1e293b', background: 'transparent', color: '#475569',
-                        borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
-                      }}>
-                        ← YENİ ANALİZ
+                    <div className="col-span-12 flex justify-center py-8">
+                      <button
+                        onClick={reset}
+                        className="px-8 py-3 border border-outline-variant text-label-caps font-label-caps hover:border-primary hover:text-primary transition-all flex items-center gap-3"
+                      >
+                        <RefreshCw size={18} /> NEW AUDIT SESSION
                       </button>
                     </div>
-                  </>
-                );
-              })()}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+
+                  </div>
+                </section>
+              )}
+
+              {!isAnalyzing && progress.length === 0 && !audit && (
+                <div className="flex-1 flex flex-col items-center justify-center opacity-30">
+                  <FileSearch size={64} className="mb-4" />
+                  <div className="text-label-caps font-label-caps tracking-[0.3em]">SYSTEM_READY_FOR_INFERENCE</div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </main>
 
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
-        * { box-sizing: border-box; }
-        input::placeholder { color: #1e293b; }
-        @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.3 } }
-        @keyframes bounce { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
+        .uncertainty-pattern {
+          background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.05) 2px, rgba(255,255,255,0.05) 4px);
+        }
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
       `}</style>
     </div>
   );

@@ -5,7 +5,12 @@ backend/*.pyc
 backend/venv/
 .venv/
 myenv/
+venv/
 .vscode/
+
+# Python caches
+**/__pycache__/
+*.py[cod]
 
 # Frontend
 frontend/node_modules/
