@@ -123,6 +123,16 @@ clearcart-ai/
         ├── App.tsx
         └── components/
 ```
+## Testler
+
+```bash
+cd backend
+.venv\Scripts\python.exe -m pytest tests/test_api.py -v
+```
+
+2 test: root endpoint ve URL validasyonu.
+
+---
 
 ---
 
