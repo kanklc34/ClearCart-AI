@@ -1,74 +1,87 @@
-# ![ClearCart AI Banner](file:///C:/Users/KAAN/.gemini/antigravity/brain/e8996d60-0d32-405d-b9fd-a9f02e10c565/clearcart_ai_banner_1778859498746.png)
+# ClearCart AI — E-Ticaret Güven Denetim Motoru
 
-# ClearCart AI: Probabilistic Trust & Multi-Agent Audit Engine 🛡️
-
-**ClearCart AI**, e-ticaret dünyasındaki bilgi asimetrisini ortadan kaldırmak için tasarlanmış, **araştırma düzeyinde bir olasılıksal güven katmanıdır.** Klasik "AI asistanı" yaklaşımlarının ötesine geçerek, pazar yeri ilanlarını otonom ajanlar arası bir "tartışma ve uzlaşma" (Multi-Agent Consensus) mekanizmasıyla denetler.
+> Bir ürün linkini yapıştır. Üç bağımsız yapay zeka ajanı tartışır, hakem karar verir.
 
 ---
 
-## 🧠 Vizyon ve Mimari: Neden Farklı?
-# 🛡️ ClearCart AI — Commerce Trust Layer
+## Nedir?
 
-![ClearCart AI Banner](clearcart_ai_banner_1778859498746.png)
+ClearCart AI, e-ticaret ürün sayfalarını analiz eden çok ajanlı bir denetim sistemidir. Kullanıcı bir ürün URL'si girer; sistem arka planda üç ajan çalıştırır:
 
-> **Misyonumuz:** E-ticaretteki bilgi asimetrisini ve manipülatif tasarım öğelerini (Dark Patterns) teknoloji ile nötralize ederek, dijital ticareti şeffaf ve güvenilir bir zemine taşımak.
+- **Savunucu** — Ürünü satın almanın lehine tüm argümanları üretir
+- **İtirazçı** — Dark pattern'ları, gizli maliyetleri ve riskleri tespit eder
+- **Hakem** — İki tarafı dinleyip tarafsız nihai karar verir: AL / DOĞRULA / KAÇIN
 
----
-
-## 🎯 Vizyon: Alışverişte "Güven Katmanı"
-ClearCart AI, bir fiyat karşılaştırma aracı değildir. Biz, e-ticaret siteleri ile kullanıcı arasındaki "güven boşluğunu" dolduran otonom bir denetim motoruyuz. **Çoklu Ajan Konsensüsü (Multi-Agent Consensus)** mimarimiz sayesinde, her bir ürün ilanı bağımsız yapay zeka ajanları tarafından denetlenir ve rasyonel bir güven skoru oluşturulur.
-
-### Neyi Çözüyoruz?
-- **Yanıltıcı Fiyatlandırma:** Yapay indirimler ve "fiyat köpürtme" tekniklerinin tespiti.
-- **Karanlık Desenler (Dark Patterns):** "Son 1 ürün" veya "X kişi şu an bakıyor" gibi sahte aciliyet sinyallerinin doğrulanması.
-- **Politika Belirsizliği:** Karmaşık iade ve garanti şartlarının tüketici lehine/aleyine analiz edilmesi.
+Kararlar ikili (evet/hayır) değildir. Sistem her ürün için 0-100 arası güven skoru üretir ve kararın gerekçesini gösterir.
 
 ---
 
-## 🧠 Karar Motoru: Olasılıksal Güven Analizi
-Kararlarımız ikili (Evet/Hayır) değildir. Sistem, **Epistemik Belirsizlik (Epistemic Uncertainty)** analizi yaparak; verinin eksikliği ile verideki anomali arasındaki farkı ayırt eder.
+## Ne Çözüyor?
+
+- **Yanıltıcı fiyatlandırma** — Yapay indirimler, üyeliğe özel gizli fiyatlar
+- **Dark pattern tespiti** — Yapay aciliyet, yanıltıcı stok sinyalleri, sosyal kanıt manipülasyonu
+- **Politika şeffaflığı** — Eksik iade/garanti bilgileri, gizli koşullar
 
 ---
 
-## 🚀 Öne Çıkan Özellikler
+## Mimari
 
-- **Otonom Denetim Akışı:** URL'den veri yakalamadan (Data Capture) nihai uzlaşma puanlamasına kadar tam otomatik pipeline.
-- **Kategori Bazlı Doğrulama:** Ürünün kategorisine göre (Elektronik, Kozmetik vb.) özelleşmiş fiyat tabanı ve politika analizi.
-- **Davranışsal Baskı Tespiti:** Yapay aciliyet ve yanıltıcı stok sinyallerinin otonom tespiti.
-- **Şeffaf Analiz (Logic Explorer):** Kararın arkasındaki ajan ağırlıklarını ve karar eşiklerini görebileceğiniz interaktif panel.
+```
+URL → Orchestrator (doğrulama) → Scraper (veri çekme)
+    → Savunucu + İtirazçı (paralel)
+    → Hakem (nihai karar)
+    → SSE stream ile frontend'e canlı aktarım
+```
+
+Tüm ajanlar Google Gemini API kullanır. Savunucu ve İtirazçı paralel çalışır (`asyncio.gather`), bu da analiz süresini yaklaşık %50 kısaltır.
 
 ---
 
-## 🛠 Teknik Yığın (Tech Stack)
+## Teknik Yığın
+
+**Backend**
+- Python, FastAPI, Uvicorn
+- Google Gemini (gemini-2.5-flash — model + API key fallback zinciri)
+- Playwright (bot koruması aşan scraper)
+- SSE (Server-Sent Events) ile gerçek zamanlı akış
+
+**Frontend**
+- React 19, TypeScript, Vite
+- Tailwind CSS v4
+- Framer Motion
+
+---
+
+## Kurulum
+
+### Gereksinimler
+- Python 3.11+
+- Node.js 18+
+- Google Gemini API key ([buradan al](https://aistudio.google.com))
 
 ### Backend
-- **Framework:** FastAPI (Python)
-- **AI Core:** Google Gemini 2.0 (Pro/Flash/Lite Rotasyonu)
-- **Architecture:** Agentic Workflows (LangChain/Custom Logic)
-- **Scraping:** Advanced Multi-Proxy Content Extraction
 
-### Frontend
-- **Engine:** Vite + React 19 + TypeScript
-- **Styling:** Premium Custom CSS Design System (Tailwind tabanlı değil, tamamen özelleştirilmiş)
-- **Visuals:** Lucide Icons & Framer Motion Animations
-
----
-
-## ⚙️ Kurulum ve Çalıştırma
-
-### 1. Ortam Değişkenleri
-`.env.example` dosyasını `.env` olarak kopyalayın ve Gemini API anahtarınızı ekleyin.
-
-### 2. Backend Kurulumu
 ```bash
 cd backend
-python -m venv venv
-source venv/bin/activate  # Windows için: venv\Scripts\activate
+python -m venv .venv
+.venv\Scripts\activate        # Windows
+# source .venv/bin/activate   # Mac/Linux
 pip install -r requirements.txt
+playwright install chromium
+```
+
+`.env` dosyası oluştur:
+```
+GEMINI_API_KEY=your_key_here
+GEMINI_API_KEY_2=your_second_key_here  # opsiyonel
+```
+
+```bash
 python -m uvicorn app.main:app --reload
 ```
 
-### 3. Frontend Kurulumu
+### Frontend
+
 ```bash
 cd frontend
 npm install
@@ -77,17 +90,49 @@ npm run dev
 
 ---
 
-## 🧪 Kalite Güvencesi
-Sistem, her modül için otonom doğrulama testlerine sahiptir:
-```bash
-cd backend
-pytest  # Çekirdek denetim mantığı testleri
+## Kullanım
+
+1. Backend ve frontend'i başlat
+2. Tarayıcıda `http://localhost:5173` aç
+3. Trendyol, Hepsiburada veya Amazon ürün linkini yapıştır
+4. "Tara" butonuna tıkla
+5. Ajanların canlı tartışmasını izle, hakem kararını gör
+
+---
+
+## Proje Yapısı
+
+```
+clearcart-ai/
+├── backend/
+│   ├── app/
+│   │   ├── agents/
+│   │   │   ├── orchestrator.py
+│   │   │   ├── advocate_agent.py
+│   │   │   ├── devils_advocate_agent.py
+│   │   │   └── judge_agent.py
+│   │   ├── services/
+│   │   │   ├── gemini_service.py
+│   │   │   └── scraper_service.py
+│   │   ├── api/
+│   │   │   └── analysis.py
+│   │   └── main.py
+│   └── requirements.txt
+└── frontend/
+    └── src/
+        ├── App.tsx
+        └── components/
 ```
 
 ---
 
-## 📌 Not
-*Bu proje, marketplace güvenliği üzerine bir Ar-Ge prototipidir. Kararlar tavsiye niteliğindedir ve teknik analiz sonuçlarına dayanır.*
+## Desteklenen Platformlar
+
+- Trendyol
+- Hepsiburada (şeffaflık ihlali olarak raporlanır)
+- Amazon
+- N11 ve diğer platformlar (genel scraper)
 
 ---
-**ClearCart AI** - *E-Ticarette Şeffaflık ve Güvenin Yeni Standartı.*
+
+*ClearCart AI — BTK Akademi Hacksathon 2026*
