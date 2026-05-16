@@ -41,8 +41,7 @@ export const DecisionLogic: React.FC<DecisionLogicProps> = ({
 
             {view === 'LOGIC' ? (
                 /* ── 3 kolon grid: Signals | Drivers | Anomalies ── */
-                <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-outline-variant">
-
+                <div className="flex flex-col divide-y divide-outline-variant">
                     {/* Kolon 1: Strongest Signals */}
                     <div className="p-5 flex flex-col gap-4">
                         <h4 className="text-label-caps font-label-caps text-on-surface-variant">

@@ -2,6 +2,10 @@
 
 > Bir ürün linkini yapıştır. Üç bağımsız yapay zeka ajanı tartışır, hakem karar verir.
 
+## Demo
+
+[![ClearCart AI Demo](https://img.youtube.com/vi/XQyMVfQDInM/0.jpg)](https://www.youtube.com/watch?v=XQyMVfQDInM)
+
 ---
 
 ## Nedir?
@@ -123,6 +127,9 @@ clearcart-ai/
         ├── App.tsx
         └── components/
 ```
+
+---
+
 ## Testler
 
 ```bash
@@ -131,8 +138,6 @@ cd backend
 ```
 
 2 test: root endpoint ve URL validasyonu.
-
----
 
 ---
 
