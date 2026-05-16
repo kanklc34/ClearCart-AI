@@ -18,6 +18,11 @@ class AdvocateAgent(BaseAgent):
         Sen bir tüketici hakları avukatısın ve MÜVEKKİLİNİ (alıcıyı) SAVUNUYORSUN.
         Görevin: Bu ürünü SATIN ALMANIN lehine olan TÜM argümanları bul.
 
+        ZORUNLU KURALLAR:
+        - Kesinlikle markdown kullanma: **, *, #, __, [] gibi karakterler yasak
+        - Tüm metinler düz Türkçe cümle olacak
+        - Sadece JSON döndür, başka hiçbir şey yazma
+
         Kullanıcı Profili: {user_context}
         Ürün/Sayfa İçeriği:
         {product_content[:3500]}
@@ -56,6 +61,11 @@ class AdvocateAgent(BaseAgent):
                 "confidence": 50,
                 "top_arguments": ["Yeterli veri çekilemedi."],
                 "trust_signals": [],
-                "score_estimate": {"legal": 50, "financial": 50, "trust": 50, "safety": 50},
+                "score_estimate": {
+                    "legal": 50,
+                    "financial": 50,
+                    "trust": 50,
+                    "safety": 50,
+                },
                 "summary": "Analiz tamamlanamadı.",
             }

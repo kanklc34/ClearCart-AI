@@ -7,16 +7,25 @@
 ---
 
 ## 🧠 Vizyon ve Mimari: Neden Farklı?
+# 🛡️ ClearCart AI — Commerce Trust Layer
 
-Çoğu AI sistemi size sadece bir "karar" verir. ClearCart AI ise size bir **kanıt hipotez alanı** sunar.
+![ClearCart AI Banner](clearcart_ai_banner_1778859498746.png)
 
-### 🛡️ Çoklu Ajan Konsensüsü (Multi-Agent Consensus)
-Sistemimiz, her ilanı üç farklı perspektiften eş zamanlı olarak analiz eder:
-1. **Savunmacı (Advocate):** İlandaki olumlu sinyalleri, güven verici unsurları ve kullanıcı lehine olan politikaları bulur.
-2. **Şüpheci (Devil's Advocate):** "Dark pattern"ları, gizli riskleri ve psikolojik baskı unsurlarını (FOMO) deşifre eder.
-3. **Hakem (Judge):** Her iki tarafın argümanlarını teknik bir titizlikle tartar, çelişkileri çözer ve nihai olasılık dağılımını hesaplar.
+> **Misyonumuz:** E-ticaretteki bilgi asimetrisini ve manipülatif tasarım öğelerini (Dark Patterns) teknoloji ile nötralize ederek, dijital ticareti şeffaf ve güvenilir bir zemine taşımak.
 
-### 📊 Olasılıksal Güven Motoru (Probabilistic Trust Engine)
+---
+
+## 🎯 Vizyon: Alışverişte "Güven Katmanı"
+ClearCart AI, bir fiyat karşılaştırma aracı değildir. Biz, e-ticaret siteleri ile kullanıcı arasındaki "güven boşluğunu" dolduran otonom bir denetim motoruyuz. **Çoklu Ajan Konsensüsü (Multi-Agent Consensus)** mimarimiz sayesinde, her bir ürün ilanı bağımsız yapay zeka ajanları tarafından denetlenir ve rasyonel bir güven skoru oluşturulur.
+
+### Neyi Çözüyoruz?
+- **Yanıltıcı Fiyatlandırma:** Yapay indirimler ve "fiyat köpürtme" tekniklerinin tespiti.
+- **Karanlık Desenler (Dark Patterns):** "Son 1 ürün" veya "X kişi şu an bakıyor" gibi sahte aciliyet sinyallerinin doğrulanması.
+- **Politika Belirsizliği:** Karmaşık iade ve garanti şartlarının tüketici lehine/aleyine analiz edilmesi.
+
+---
+
+## 🧠 Karar Motoru: Olasılıksal Güven Analizi
 Kararlarımız ikili (Evet/Hayır) değildir. Sistem, **Epistemik Belirsizlik (Epistemic Uncertainty)** analizi yaparak; verinin eksikliği ile verideki anomali arasındaki farkı ayırt eder.
 
 ---

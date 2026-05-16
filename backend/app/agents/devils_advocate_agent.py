@@ -24,6 +24,11 @@ class DevilsAdvocateAgent(BaseAgent):
         Özellikle şu konulara odaklan: dark pattern'lar, gizli ücretler, iade zorlukları,
         yanıltıcı ifadeler, eksik bilgiler, garanti tuzakları.
 
+        ZORUNLU KURALLAR:
+        - Kesinlikle markdown kullanma: **, *, #, __, [] gibi karakterler yasak
+        - Tüm metinler düz Türkçe cümle olacak
+        - Sadece JSON döndür, başka hiçbir şey yazma
+
         Kullanıcı Profili: {user_context}
 
         Rakip Avukatın Argümanları (bunlara itiraz et):
@@ -73,6 +78,11 @@ class DevilsAdvocateAgent(BaseAgent):
                 "dark_patterns": [],
                 "rebuttals": [],
                 "regret_scenarios": [],
-                "score_estimate": {"legal": 50, "financial": 50, "trust": 50, "safety": 50},
+                "score_estimate": {
+                    "legal": 50,
+                    "financial": 50,
+                    "trust": 50,
+                    "safety": 50,
+                },
                 "summary": "Analiz tamamlanamadı.",
             }
