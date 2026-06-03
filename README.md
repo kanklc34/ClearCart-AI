@@ -150,4 +150,4 @@ cd backend
 
 ---
 
-*ClearCart AI — BTK Akademi Hacksathon 2026*
+*ClearCart AI — BTK Akademi Hackathon 2026*
